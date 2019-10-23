@@ -39,6 +39,7 @@ export class StockSearchbarComponent implements OnInit {
         this.items = stockRoom.getNames();
       }
     })
+    this.stockSelected.emit(null);
   }
 
   getItems(ev: any) {

@@ -1,16 +1,16 @@
 <ion-header>
-  <ion-toolbar color="dark">
+  <ion-toolbar color="primary">
     <ion-title class="ion-no-padding">
       <ion-searchbar placeholder="시리얼 넘버, 장소" [(ngModel)]="deviceTerm" (ionChange)="setFilteredDevices()">
       </ion-searchbar>
-      <app-stock-searchbar [selectedDevice]="selectedDevice" (stockSelected)="readyToSend($event)"
-        *ngIf="selectedDevice">
+      <app-stock-searchbar [items]="getSelectedDeviceStocks()" [selectedDevice]="selectedDevice"
+        (stockSelected)="changeSandMode($event)" *ngIf="selectedDevice">
       </app-stock-searchbar>
     </ion-title>
     <div slot="secondary" class="ion-padding" *ngIf="isDeviceAndSotckSelected">
       <ion-button fill="solid" color="light" type="button" (click)="supplySotck()">
-        <ion-icon name="paper-plane"></ion-icon>
-        <ion-badge color="dark">1</ion-badge>
+        <ion-icon color="primary" name="paper-plane"></ion-icon>
+        <ion-badge color="danger">1</ion-badge>
       </ion-button>
     </div>
   </ion-toolbar>

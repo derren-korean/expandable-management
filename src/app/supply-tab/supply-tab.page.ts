@@ -24,6 +24,7 @@ export class SupplyTabPage implements OnDestroy {
   private deviceSub = new Subscription;
   private groupedDevices: GroupedDevice[] = [];
   private filteredDevices: GroupedDevice[] = [];
+  private _stockHouse: StockHouse;
 
   private selectedDevice: Device;
   private selectedStock: Stock;
@@ -32,8 +33,9 @@ export class SupplyTabPage implements OnDestroy {
 
   constructor(
     private gDService: GroupedDeviceService,
-    private deviceCommon: DeviceCommon,
-    private dEventService: DeviceEventService
+    private common: DeviceCommon,
+    private dEventService: DeviceEventService,
+    private stockService: StockService
   ) { }
 
   ionViewDidEnter() {
@@ -41,6 +43,11 @@ export class SupplyTabPage implements OnDestroy {
       this.groupedDevices = [...groupedDevices];
       this.setFilteredDevices();
     });
+    this.deviceSub.add(
+      this.stockService.stockHouse.subscribe(arr => {
+        this._stockHouse = new StockHouse([...arr.stockHouse]);
+      })
+    )
   }
 
   setFilteredDevices() {
@@ -62,13 +69,15 @@ export class SupplyTabPage implements OnDestroy {
   }
 
   selectDevice(device: Device) {
+    console.log("check the device is null. when reset is called.")
     this.selectedDevice = device;
     this.deviceTerm = device.serialNumber.split('-').pop();
+
     // auto-focus기능 추가
   }
 
   getThumbnail(name: string) {
-    return this.deviceCommon.getDeviceImgAddress(name);
+    return this.common.getDeviceImgAddress(name);
   }
 
   ngOnDestroy() {
@@ -86,10 +95,22 @@ export class SupplyTabPage implements OnDestroy {
     }
   }
 
-  readyToSend(stock: Stock) {
+  private _isEqualToSelectedItemRoom = (stockRoom) => this.common.isSameName(stockRoom.roomName, this.selectedDevice.name);
+
+  getSelectedDeviceStocks() {
+    this._stockHouse.stockHouse.forEach(stockRoom => {
+      if (this._isEqualToSelectedItemRoom(stockRoom)) {
+        return stockRoom.getNames();
+      }
+    })
+  }
+
+  changeSandMode(stock: Stock) {
     if (stock && stock.name.length) {
       this.selectedStock = stock;
       this.isDeviceAndSotckSelected = true;
+    } else {
+      this.isDeviceAndSotckSelected = false;
     }
   }
 
