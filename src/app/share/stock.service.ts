@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 import { Stock } from './stock.model';
-import { BehaviorSubject } from 'rxjs';
 import { DeviceCommon } from './device-common';
 
 class StockRoom {
