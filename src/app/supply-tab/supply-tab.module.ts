@@ -3,15 +3,16 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Tab1Page } from './tab1.page';
+import { SupplyTabPage } from './supply-tab.page';
+import { StockSearchbarComponent } from '../share/stock-searchbar/stock-searchbar.component';
 
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    RouterModule.forChild([{ path: '', component: Tab1Page }])
+    RouterModule.forChild([{ path: '', component: SupplyTabPage }])
   ],
-  declarations: [Tab1Page]
+  declarations: [SupplyTabPage, StockSearchbarComponent]
 })
-export class Tab1PageModule {}
+export class SupplyTabPageModule { }

@@ -1,0 +1,10 @@
+<div>
+  <ion-searchbar placeholder="소모품 명칭" [(ngModel)]="itemTerm" autocomplete="on" debounce="500"
+    (ionInput)="getItems($event)">
+  </ion-searchbar>
+  <ion-list *ngIf="isItemAvailable">
+    <ion-item *ngFor="let item of items" (click)="fillSearchBarWithSelectedName(item)" style="cursor: pointer;">
+      {{ item }}
+    </ion-item>
+  </ion-list>
+</div>

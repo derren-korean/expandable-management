@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title class="ion-no-padding">
+      <ion-searchbar placeholder="시리얼 넘버, 장소" [(ngModel)]="deviceTerm" (ionChange)="setFilteredDevices()">
+      </ion-searchbar>
+      <app-stock-searchbar [selectedDevice]="selectedDevice" (stockSelected)="readyToSend($event)"
+        *ngIf="selectedDevice">
+      </app-stock-searchbar>
+    </ion-title>
+    <div slot="secondary" class="ion-padding" *ngIf="isDeviceAndSotckSelected">
+      <ion-button fill="solid" color="light" type="button" (click)="supplySotck()">
+        <ion-icon name="paper-plane"></ion-icon>
+        <ion-badge color="dark">1</ion-badge>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col size-lg="4" offset-lg="4" size-md="6" offset-md="3">
+      <ion-card *ngFor="let grouped of filteredDevices">
+        <ion-item-divider color="light">
+          {{ grouped.section }}
+        </ion-item-divider>
+        <ion-virtual-scroll [items]="grouped.devices" approxItemHeight="320px">
+          <ion-item *virtualItem="let device" (click)="selectDevice(device)">
+            <!-- <ion-thumbnail slot="start">
+              <img [src]="getThumbnail(device.name)">
+            </ion-thumbnail> -->
+            <ion-label>
+              <h1>{{ device.location }}</h1>
+              <p>{{ device.serialNumber }}</p>
+            </ion-label>
+            <ion-checkbox color="light" slot="end" [(ngModel)]="device.isChecked" (click)="reset(device)">
+            </ion-checkbox>
+          </ion-item>
+        </ion-virtual-scroll>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>
