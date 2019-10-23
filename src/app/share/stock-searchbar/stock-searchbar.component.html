@@ -2,9 +2,16 @@
   <ion-searchbar placeholder="소모품 명칭" [(ngModel)]="itemTerm" autocomplete="on" debounce="500"
     (ionInput)="getItems($event)">
   </ion-searchbar>
-  <ion-list *ngIf="isItemAvailable">
-    <ion-item *ngFor="let item of items" (click)="fillSearchBarWithSelectedName(item)" style="cursor: pointer;">
-      {{ item }}
+  <ion-list *ngIf="isItemAvailable" class="ion-margin">
+    <ion-item *ngFor="let item of items" (click)="fillSearchBarWithSelectedName(item.title)" style="cursor: pointer;">
+      <ion-label class="ion-text-wrap">
+        <strong>{{item.title}}</strong>
+        <ion-text *ngIf="item.subTitles || item.subTitles.length" color="medium">
+          <span *ngFor="let subTitle of item.subTitles">
+            ({{subTitle}})
+          </span>
+        </ion-text>
+      </ion-label>
     </ion-item>
   </ion-list>
 </div>
