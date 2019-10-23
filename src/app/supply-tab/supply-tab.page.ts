@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { NgModel, NgControl } from '@angular/forms';
 import { Device } from '../share/device.model';
-import { DeviceCommon } from '../share/device-common';
+import { DeviceCommon, ItemView } from '../share/device-common';
 import { GroupedDevice } from '../share/grouped-device.model'
 import { GroupedDeviceService } from '../share/grouped-device.service';
 import { StockService, StockHouse } from '../share/stock.service';
@@ -24,6 +24,8 @@ export class SupplyTabPage implements OnDestroy {
   private deviceSub = new Subscription;
   private groupedDevices: GroupedDevice[] = [];
   private filteredDevices: GroupedDevice[] = [];
+  private _stockHouse: StockHouse;
+  itemViewArr: ItemView[] = [];
 
   private selectedDevice: Device;
   private selectedStock: Stock;
@@ -32,8 +34,9 @@ export class SupplyTabPage implements OnDestroy {
 
   constructor(
     private gDService: GroupedDeviceService,
-    private deviceCommon: DeviceCommon,
-    private dEventService: DeviceEventService
+    private common: DeviceCommon,
+    private dEventService: DeviceEventService,
+    private stockService: StockService
   ) { }
 
   ionViewDidEnter() {
@@ -41,6 +44,11 @@ export class SupplyTabPage implements OnDestroy {
       this.groupedDevices = [...groupedDevices];
       this.setFilteredDevices();
     });
+    this.deviceSub.add(
+      this.stockService.stockHouse.subscribe(arr => {
+        this._stockHouse = new StockHouse([...arr.stockHouse]);
+      })
+    )
   }
 
   setFilteredDevices() {
@@ -62,13 +70,15 @@ export class SupplyTabPage implements OnDestroy {
   }
 
   selectDevice(device: Device) {
+    console.log("check the device is null. when reset is called.")
     this.selectedDevice = device;
     this.deviceTerm = device.serialNumber.split('-').pop();
+    this.setItemView(device.name);
     // auto-focus기능 추가
   }
 
   getThumbnail(name: string) {
-    return this.deviceCommon.getDeviceImgAddress(name);
+    return this.common.getDeviceImgAddress(name);
   }
 
   ngOnDestroy() {
@@ -86,15 +96,43 @@ export class SupplyTabPage implements OnDestroy {
     }
   }
 
-  readyToSend(stock: Stock) {
-    if (stock && stock.name.length) {
-      this.selectedStock = stock;
+  setItemView(name: string) {
+    this.itemViewArr = [];
+    this._stockHouse.stockHouse.forEach(stockRoom => {
+      if (this.common.isSameName(stockRoom.roomName, name)) {
+        for (const stock of stockRoom.stockArray) {
+          let _tempArr = [];
+          if (stock.alias && stock.alias.length) {
+            _tempArr = [...stock.alias];
+          }
+          this.itemViewArr.push(new ItemView(stock.name, _tempArr));
+        }
+      }
+    })
+  }
+
+  selectStock(title) {
+    let _stock: Stock;
+    this._stockHouse.stockHouse.forEach(stockRoom => {
+      if (this.common.isSameName(stockRoom.roomName, this.selectedDevice.name)) {
+        this.selectedStock = stockRoom.stockArray.find(stock => {
+          return this.common.isSameName(stock.name, title) || stock.alias.some(alias => this.common.isSameName(alias, title))
+        })
+      }
+    })
+  }
+
+  changeSandMode(title: string) {
+    if (title && title.length) {
+      this.selectStock(title);
       this.isDeviceAndSotckSelected = true;
+    } else {
+      this.isDeviceAndSotckSelected = false;
     }
   }
 
   supplySotck() {
-    if (this.selectDevice && this.selectedStock) {
+    if (this.selectedDevice && this.selectedStock) {
       this.isLoading = true;
       this.reset(this.selectedDevice);
       this.dEventService.supplyStock(this.selectedDevice, this.selectedStock).subscribe(a => {
