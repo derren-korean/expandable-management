@@ -38,7 +38,6 @@ export class StockService {
   private _stockHouse = new BehaviorSubject<StockHouse>(new StockHouse([]));
 
   constructor(private http: HttpClient, private common: DeviceCommon) {
-    this._initStockHouse();
     this._initStocks();
   }
 
@@ -56,7 +55,9 @@ export class StockService {
 
   private _initStocks() {
     this.http.get<Stock[]>('../../assets/stockList.json')
-      .forEach(this._pushStocks);
+      .forEach(this._pushStocks).then(() => {
+        this._initStockHouse();
+      });
   }
 
   private _pushStocks = (stocks: Stock[]) => {

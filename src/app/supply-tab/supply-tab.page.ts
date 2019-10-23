@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { NgModel, NgControl } from '@angular/forms';
 import { Device } from '../share/device.model';
-import { DeviceCommon } from '../share/device-common';
+import { DeviceCommon, ItemView } from '../share/device-common';
 import { GroupedDevice } from '../share/grouped-device.model'
 import { GroupedDeviceService } from '../share/grouped-device.service';
 import { StockService, StockHouse } from '../share/stock.service';
@@ -25,6 +25,7 @@ export class SupplyTabPage implements OnDestroy {
   private groupedDevices: GroupedDevice[] = [];
   private filteredDevices: GroupedDevice[] = [];
   private _stockHouse: StockHouse;
+  itemViewArr: ItemView[] = [];
 
   private selectedDevice: Device;
   private selectedStock: Stock;
@@ -72,7 +73,7 @@ export class SupplyTabPage implements OnDestroy {
     console.log("check the device is null. when reset is called.")
     this.selectedDevice = device;
     this.deviceTerm = device.serialNumber.split('-').pop();
-
+    this.setItemView(device.name);
     // auto-focus기능 추가
   }
 
@@ -95,19 +96,35 @@ export class SupplyTabPage implements OnDestroy {
     }
   }
 
-  private _isEqualToSelectedItemRoom = (stockRoom) => this.common.isSameName(stockRoom.roomName, this.selectedDevice.name);
-
-  getSelectedDeviceStocks() {
+  setItemView(name: string) {
+    this.itemViewArr = [];
     this._stockHouse.stockHouse.forEach(stockRoom => {
-      if (this._isEqualToSelectedItemRoom(stockRoom)) {
-        return stockRoom.getNames();
+      if (this.common.isSameName(stockRoom.roomName, name)) {
+        for (const stock of stockRoom.stockArray) {
+          let _tempArr = [];
+          if (stock.alias && stock.alias.length) {
+            _tempArr = [...stock.alias];
+          }
+          this.itemViewArr.push(new ItemView(stock.name, _tempArr));
+        }
       }
     })
   }
 
-  changeSandMode(stock: Stock) {
-    if (stock && stock.name.length) {
-      this.selectedStock = stock;
+  selectStock(title) {
+    let _stock: Stock;
+    this._stockHouse.stockHouse.forEach(stockRoom => {
+      if (this.common.isSameName(stockRoom.roomName, this.selectedDevice.name)) {
+        this.selectedStock = stockRoom.stockArray.find(stock => {
+          return this.common.isSameName(stock.name, title) || stock.alias.some(alias => this.common.isSameName(alias, title))
+        })
+      }
+    })
+  }
+
+  changeSandMode(title: string) {
+    if (title && title.length) {
+      this.selectStock(title);
       this.isDeviceAndSotckSelected = true;
     } else {
       this.isDeviceAndSotckSelected = false;
@@ -115,7 +132,7 @@ export class SupplyTabPage implements OnDestroy {
   }
 
   supplySotck() {
-    if (this.selectDevice && this.selectedStock) {
+    if (this.selectedDevice && this.selectedStock) {
       this.isLoading = true;
       this.reset(this.selectedDevice);
       this.dEventService.supplyStock(this.selectedDevice, this.selectedStock).subscribe(a => {
