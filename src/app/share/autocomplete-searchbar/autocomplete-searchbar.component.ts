@@ -1,22 +1,27 @@
-import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ViewChild, Output, EventEmitter, OnInit } from '@angular/core';
 import { DeviceCommon, ItemView } from '../device-common';
+import { IonSearchbar } from '@ionic/angular';
 
 @Component({
   selector: 'app-autocomplete-searchbar',
   templateUrl: './autocomplete-searchbar.component.html',
   styleUrls: ['./autocomplete-searchbar.component.scss'],
 })
-export class AutocompleteSearchbarComponent {
+export class AutocompleteSearchbarComponent implements OnInit {
 
   @Input() itemViewArr: ItemView[];
   @Output() itemSelected = new EventEmitter<string>();
-  @ViewChild('', { static: true }) searchbarInput: string;
+  @ViewChild('searchbar', { static: true }) searchbar: IonSearchbar;
 
   private listActive = false;
   private items: ItemView[] = [];
   private cho_sung: string[] = ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
 
   constructor(private common: DeviceCommon) { }
+
+  ngOnInit() {
+    this.searchbar.setFocus();
+  }
 
   private includeAnySpell = (result: ItemView[], item: ItemView, term: string) => {
     const include = (str: string) => str.toLowerCase().indexOf(term.toLowerCase()) > -1;
@@ -35,6 +40,7 @@ export class AutocompleteSearchbarComponent {
     return this.cho_sung.some(cho => cho === str);
   }
 
+  // 첫 한글자만 작동하도록 만듬. 2글자 이상은 불필요한 글자임.
   private fisrt_char_is_same = (str, term) => {
     const code = str.charCodeAt(0) - 44032;
     return term == this.cho_sung[Math.floor(code / 588)];
@@ -69,9 +75,11 @@ export class AutocompleteSearchbarComponent {
   }
 
   fillSearchbarText(title: string) {
-    this.searchbarInput = title;
-    this.listActive = false;
-    this.itemSelected.emit(title);
+    this.searchbar.getInputElement().then((el) => {
+      el.value = title;
+      this.listActive = false;
+      this.itemSelected.emit(title);
+    });
   }
 
 }

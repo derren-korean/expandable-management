@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { NgModel, NgControl } from '@angular/forms';
 import { Device } from '../share/device.model';
 import { DeviceCommon, ItemView } from '../share/device-common';
 import { GroupedDevice } from '../share/grouped-device.model'
@@ -18,7 +17,6 @@ import { Stock } from '../share/stock.model';
 export class SupplyTabPage implements OnDestroy {
 
   //todo : 2개의 컴포넌트로 나뉜다, listComponent, SearchComponent 
-
   @ViewChild('deviceTerm', { static: true }) deviceTerm: string;
   private isLoading = false;
   private deviceSub = new Subscription;
@@ -70,11 +68,9 @@ export class SupplyTabPage implements OnDestroy {
   }
 
   selectDevice(device: Device) {
-    console.log("check the device is null. when reset is called.")
     this.selectedDevice = device;
     this.deviceTerm = device.serialNumber.split('-').pop();
     this.setItemView(device.name);
-    // auto-focus기능 추가
   }
 
   getThumbnail(name: string) {

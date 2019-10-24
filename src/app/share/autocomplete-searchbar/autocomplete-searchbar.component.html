@@ -1,6 +1,5 @@
 <div>
-  <ion-searchbar placeholder="소모품 명칭" [(ngModel)]="searchbarInput" autocomplete="on" debounce="500"
-    (ionInput)="filterItems($event)">
+  <ion-searchbar placeholder="소모품 명칭" autocomplete="on" debounce="500" (ionInput)="filterItems($event)" #searchbar>
   </ion-searchbar>
   <ion-list *ngIf="listActive" class="ion-margin">
     <ion-item *ngIf="items.length == 0">검색어로 시작하는 단어가 없습니다.</ion-item>
