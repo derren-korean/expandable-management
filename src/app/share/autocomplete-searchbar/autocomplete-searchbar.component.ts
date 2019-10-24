@@ -1,18 +1,22 @@
-import { Component, Input, ViewChild, Output, EventEmitter, OnInit } from '@angular/core';
-import { DeviceCommon, ItemView } from '../device-common';
+import { Component, Input, ViewChild, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { IonSearchbar } from '@ionic/angular';
+import { BehaviorSubject, Subscription } from 'rxjs';
+
+import { DeviceCommon, ItemView } from '../device-common';
 
 @Component({
   selector: 'app-autocomplete-searchbar',
   templateUrl: './autocomplete-searchbar.component.html',
   styleUrls: ['./autocomplete-searchbar.component.scss'],
 })
-export class AutocompleteSearchbarComponent implements OnInit {
+export class AutocompleteSearchbarComponent implements OnInit, OnDestroy {
 
-  @Input() itemViewArr: ItemView[];
+  @Input() itemViewArr = new BehaviorSubject<ItemView[]>([]);
   @Output() itemSelected = new EventEmitter<string>();
   @ViewChild('searchbar', { static: true }) searchbar: IonSearchbar;
 
+  private subscription = new Subscription;
+  private _itemViewArr: ItemView[] = [];
   private listActive = false;
   private items: ItemView[] = [];
   private cho_sung: string[] = ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
@@ -20,6 +24,10 @@ export class AutocompleteSearchbarComponent implements OnInit {
   constructor(private common: DeviceCommon) { }
 
   ngOnInit() {
+    this.subscription = this.itemViewArr.subscribe(itemViewArr => {
+      this._itemViewArr = itemViewArr;
+      this.fillSearchbarText(null);
+    })
     this.searchbar.setFocus();
   }
 
@@ -65,9 +73,9 @@ export class AutocompleteSearchbarComponent implements OnInit {
     const term: string = ev.target.value;
     if (term && term.trim() != '') {
       this.listActive = true;
-      this.items = [...this.itemViewArr].reduce((result: ItemView[], item: ItemView) => this.includeAnySpell(result, item, term), []);
+      this.items = [...this._itemViewArr].reduce((result: ItemView[], item: ItemView) => this.includeAnySpell(result, item, term), []);
       if (this.items.length === 0 && term.length == 1 && this.is_hangul_cho_sung(term)) {
-        this.items = [...this.itemViewArr].reduce((result: ItemView[], item: ItemView) => this.includeFirstHangul(result, item, term), []);
+        this.items = [...this._itemViewArr].reduce((result: ItemView[], item: ItemView) => this.includeFirstHangul(result, item, term), []);
       }
     } else {
       this.listActive = false;
@@ -80,6 +88,12 @@ export class AutocompleteSearchbarComponent implements OnInit {
       this.listActive = false;
       this.itemSelected.emit(title);
     });
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
 }

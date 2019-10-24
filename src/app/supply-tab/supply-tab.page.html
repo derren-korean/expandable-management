@@ -1,21 +1,4 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title class="ion-no-padding">
-      <ion-searchbar placeholder="시리얼 넘버, 장소" [(ngModel)]="deviceTerm" (ionChange)="setFilteredDevices()">
-      </ion-searchbar>
-      <app-autocomplete-searchbar [itemViewArr]="itemViewArr" (itemSelected)="changeSandMode($event)"
-        *ngIf="selectedDevice">
-      </app-autocomplete-searchbar>
-    </ion-title>
-    <div slot="secondary" class="ion-padding" *ngIf="isDeviceAndSotckSelected">
-      <ion-button fill="solid" color="light" type="button" (click)="supplySotck()">
-        <ion-icon color="primary" name="paper-plane"></ion-icon>
-        <!-- <ion-badge color="danger">1</ion-badge> -->
-      </ion-button>
-    </div>
-  </ion-toolbar>
-</ion-header>
-
+<app-search-header (termChanged)="setFilteredDevices($event)" [deviceChanged]="changedDevice"></app-search-header>
 <ion-content>
   <ion-row>
     <ion-col size-lg="4" offset-lg="4" size-md="6" offset-md="3">
@@ -24,7 +7,7 @@
           {{ grouped.section }}
         </ion-item-divider>
         <ion-virtual-scroll [items]="grouped.devices" approxItemHeight="320px">
-          <ion-item *virtualItem="let device" (click)="selectDevice(device)">
+          <ion-item *virtualItem="let device" (click)="changeDevice(device)">
             <!-- <ion-thumbnail slot="start">
               <img [src]="getThumbnail(device.name)">
             </ion-thumbnail> -->
@@ -32,7 +15,7 @@
               <h1>{{ device.location }}</h1>
               <p>{{ device.serialNumber }}</p>
             </ion-label>
-            <ion-checkbox color="primary" slot="end" [(ngModel)]="device.isChecked" (click)="reset(device)">
+            <ion-checkbox color="primary" slot="end" [(ngModel)]="device.isChecked">
             </ion-checkbox>
           </ion-item>
         </ion-virtual-scroll>
