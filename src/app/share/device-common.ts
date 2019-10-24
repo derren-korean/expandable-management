@@ -5,6 +5,13 @@ interface CategoryDeviceData {
   category: string, devices: string[]
 }
 
+export class ItemView {
+  constructor(
+    public title: string,
+    public subTitles: string[]
+  ) { }
+}
+
 @Injectable({
   providedIn: "root"
 })

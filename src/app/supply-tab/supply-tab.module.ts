@@ -4,7 +4,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupplyTabPage } from './supply-tab.page';
-import { StockSearchbarComponent } from '../share/stock-searchbar/stock-searchbar.component';
+import { AutocompleteSearchbarComponent } from '../share/autocomplete-searchbar/autocomplete-searchbar.component';
+import { SearchHeaderComponent } from './search-header/search-header.component';
 
 @NgModule({
   imports: [
@@ -13,6 +14,6 @@ import { StockSearchbarComponent } from '../share/stock-searchbar/stock-searchba
     FormsModule,
     RouterModule.forChild([{ path: '', component: SupplyTabPage }])
   ],
-  declarations: [SupplyTabPage, StockSearchbarComponent]
+  declarations: [SupplyTabPage, AutocompleteSearchbarComponent, SearchHeaderComponent]
 })
 export class SupplyTabPageModule { }

@@ -1,14 +1,10 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription, BehaviorSubject } from 'rxjs';
 
-import { NgModel, NgControl } from '@angular/forms';
 import { Device } from '../share/device.model';
 import { DeviceCommon } from '../share/device-common';
 import { GroupedDevice } from '../share/grouped-device.model'
 import { GroupedDeviceService } from '../share/grouped-device.service';
-import { StockService, StockHouse } from '../share/stock.service';
-import { DeviceEventService } from '../share/device-event.service';
-import { Stock } from '../share/stock.model';
 
 @Component({
   selector: 'app-supply-tab',
@@ -16,43 +12,37 @@ import { Stock } from '../share/stock.model';
   styleUrls: ['supply-tab.page.scss']
 })
 export class SupplyTabPage implements OnDestroy {
-
-  //todo : 2개의 컴포넌트로 나뉜다, listComponent, SearchComponent 
-
-  @ViewChild('deviceTerm', { static: true }) deviceTerm: string;
-  private isLoading = false;
   private deviceSub = new Subscription;
   private groupedDevices: GroupedDevice[] = [];
   private filteredDevices: GroupedDevice[] = [];
-
-  private selectedDevice: Device;
-  private selectedStock: Stock;
-
-  private isDeviceAndSotckSelected: boolean = false;
+  private changedDevice = new BehaviorSubject<any>({});
+  private _lastSelectedDevice: any;
 
   constructor(
     private gDService: GroupedDeviceService,
-    private deviceCommon: DeviceCommon,
-    private dEventService: DeviceEventService
+    private common: DeviceCommon
   ) { }
 
   ionViewDidEnter() {
     this.deviceSub = this.gDService.groupedDevices.subscribe(groupedDevices => {
       this.groupedDevices = [...groupedDevices];
-      this.setFilteredDevices();
+      this.setFilteredDevices(null);
     });
   }
 
-  setFilteredDevices() {
-    if (!this.deviceTerm || this.deviceTerm.length === 0) {
+  setFilteredDevices(term: string) {
+    if (!term || term.length === 0) {
+      if (this._lastSelectedDevice && this._lastSelectedDevice.isChecked) {
+        this._lastSelectedDevice.isChecked = false;
+      }
       this.filteredDevices = [...this.groupedDevices];
       return;
     }
     this.filteredDevices = this.groupedDevices.reduce((result: GroupedDevice[], currentValue: GroupedDevice) => {
-      const _serialMatch = (device: Device) => device.serialNumber.split('-').pop().startsWith(this.deviceTerm);
-      const _locationMatch = (device: Device) => device.location.toLowerCase().indexOf(this.deviceTerm.toLowerCase()) > -1;
+      const _serialMatch = (device: Device) => device.serialNumber.split('-').pop().startsWith(term);
+      const _locationMatch = (device: Device) => device.location.toLowerCase().indexOf(term.toLowerCase()) > -1;
 
-      const _filter = Number.isNaN(+this.deviceTerm) ? _locationMatch : _serialMatch;
+      const _filter = Number.isNaN(+term) ? _locationMatch : _serialMatch;
       const devices = currentValue.devices.filter(_filter);
       if (devices.length > 0) {
         result.push(new GroupedDevice(currentValue.section, devices));
@@ -61,47 +51,19 @@ export class SupplyTabPage implements OnDestroy {
     }, []);
   }
 
-  selectDevice(device: Device) {
-    this.selectedDevice = device;
-    this.deviceTerm = device.serialNumber.split('-').pop();
-    // auto-focus기능 추가
+  changeDevice(device: any) {
+    if (this._lastSelectedDevice && this._lastSelectedDevice.isChecked && device.isChecked) {
+      this._lastSelectedDevice.isChecked = false;
+    }
+    this._lastSelectedDevice = device;
+    this.changedDevice.next(device);
   }
 
   getThumbnail(name: string) {
-    return this.deviceCommon.getDeviceImgAddress(name);
+    return this.common.getDeviceImgAddress(name);
   }
 
   ngOnDestroy() {
     if (this.deviceSub) { this.deviceSub.unsubscribe(); }
   }
-
-  reset(device: any) {
-    if (device.isChecked) {
-      this.selectedDevice = null;
-      this.selectedStock = null;
-      this.deviceTerm = '';
-      this.isDeviceAndSotckSelected = false;
-      device.isChecked = !device.isChecked;
-      this.setFilteredDevices();
-    }
-  }
-
-  readyToSend(stock: Stock) {
-    if (stock && stock.name.length) {
-      this.selectedStock = stock;
-      this.isDeviceAndSotckSelected = true;
-    }
-  }
-
-  supplySotck() {
-    if (this.selectDevice && this.selectedStock) {
-      this.isLoading = true;
-      this.reset(this.selectedDevice);
-      this.dEventService.supplyStock(this.selectedDevice, this.selectedStock).subscribe(a => {
-        console.log(a);
-        this.isLoading = false;
-      })
-    }
-  }
-
 }
