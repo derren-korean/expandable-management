@@ -49,15 +49,39 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
     )
   }
 
-  emitFilterTerm(term: string) {
+  setItemView(name: string) {
+    const _temp: ItemView[] = [];
+    this._stockHouse.stockHouse.forEach(stockRoom => {
+      if (this.common.isSameName(stockRoom.roomName, name)) {
+        for (const stock of stockRoom.stockArray) {
+          let _tempArr = [];
+          if (stock.alias && stock.alias.length) {
+            _tempArr = [...stock.alias];
+          }
+          _temp.push(new ItemView(stock.name, _tempArr));
+        }
+      }
+    })
+    this.itemViewArr.next(_temp);
+  }
+
+  resetStock() {
     if (this.selectedStock) {
       this.selectedStock = null;
       this.isDeviceAndSotckSelected = false;
     }
-    this.termChanged.emit(term);
+  }
+
+  resetItemView() {
     if (this.selectedDevice) {
       this.setItemView(this.selectedDevice.name);
     }
+  }
+
+  emitFilterTerm(term: string) {
+    this.resetStock();
+    this.resetItemView(); // 검색 조건이 변경될 때마다 ItemView(autocomplete-searchbar) 리셋.
+    this.termChanged.emit(term);
   }
 
   selectStock(title) {
@@ -80,22 +104,6 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  setItemView(name: string) {
-    const _temp: ItemView[] = [];
-    this._stockHouse.stockHouse.forEach(stockRoom => {
-      if (this.common.isSameName(stockRoom.roomName, name)) {
-        for (const stock of stockRoom.stockArray) {
-          let _tempArr = [];
-          if (stock.alias && stock.alias.length) {
-            _tempArr = [...stock.alias];
-          }
-          _temp.push(new ItemView(stock.name, _tempArr));
-        }
-      }
-    })
-    this.itemViewArr.next(_temp);
-  }
-
   supplySotck() {
     if (this.selectedDevice && this.selectedStock) {
       console.log(this.selectedDevice, this.selectedStock);
@@ -106,10 +114,9 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
   }
 
   reset(device: any) {
+    this.resetStock();
     this.selectedDevice = null;
-    this.selectedStock = null;
     this.deviceTerm = ''; // 자동으로 device 리스트 초기화 trigger함
-    this.isDeviceAndSotckSelected = false;
   }
 
   ngOnDestroy() {

@@ -12,13 +12,11 @@ import { GroupedDeviceService } from '../share/grouped-device.service';
   styleUrls: ['supply-tab.page.scss']
 })
 export class SupplyTabPage implements OnDestroy {
-
-  //todo : 2개의 컴포넌트로 나뉜다, listComponent, SearchComponent 
   private deviceSub = new Subscription;
   private groupedDevices: GroupedDevice[] = [];
   private filteredDevices: GroupedDevice[] = [];
   private changedDevice = new BehaviorSubject<any>({});
-  private _lastSelectedDevices: any;
+  private _lastSelectedDevice: any;
 
   constructor(
     private gDService: GroupedDeviceService,
@@ -32,14 +30,10 @@ export class SupplyTabPage implements OnDestroy {
     });
   }
 
-  removePreviousCheckedDevice() {
-
-  }
-
   setFilteredDevices(term: string) {
     if (!term || term.length === 0) {
-      if (this._lastSelectedDevices && this._lastSelectedDevices.isChecked) {
-        this._lastSelectedDevices.isChecked = false;
+      if (this._lastSelectedDevice && this._lastSelectedDevice.isChecked) {
+        this._lastSelectedDevice.isChecked = false;
       }
       this.filteredDevices = [...this.groupedDevices];
       return;
@@ -58,10 +52,10 @@ export class SupplyTabPage implements OnDestroy {
   }
 
   changeDevice(device: any) {
-    if (this._lastSelectedDevices && this._lastSelectedDevices.isChecked && device.isChecked) {
-      this._lastSelectedDevices.isChecked = false;
+    if (this._lastSelectedDevice && this._lastSelectedDevice.isChecked && device.isChecked) {
+      this._lastSelectedDevice.isChecked = false;
     }
-    this._lastSelectedDevices = device;
+    this._lastSelectedDevice = device;
     this.changedDevice.next(device);
   }
 
