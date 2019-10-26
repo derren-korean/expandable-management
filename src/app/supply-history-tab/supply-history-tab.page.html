@@ -1,13 +1,11 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>
-      date-picker : 오늘 불출 내역
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-center">
+      불출 내역
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-item>
-    <ion-button (click)="getData()">date</ion-button>
-  </ion-item>
+  <app-datetime-picker (dateChanged)="getSupplyHistory($event)"></app-datetime-picker>
 </ion-content>

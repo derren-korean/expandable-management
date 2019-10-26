@@ -52,8 +52,8 @@ export class DeviceEventService {
   }
 
   // firebase 데이터의 특성상 ISO을 사용하므로, 한국시간으로 보려면 new Date(ISOString)을 사용.
-  // 가독성을 위해서 qeury.split 및 join하였음.
-  getByDate(date: Date) {
+  // qeury가독성을 위해 split, join, replace를 사용함.
+  getSupplyHistoryByDate(date: Date) {
     const startAt = new Date(date.setHours(0, 0, 0, 0)).toISOString();
     const endAt = new Date(date.setHours(23, 59, 59, 999)).toISOString();
     const query = `https://${this.projectId}.firebaseio.com/supplyEvent.json?
@@ -62,7 +62,7 @@ export class DeviceEventService {
     endAt="${endAt}"&
     print=pretty`;
     return this.http.get<SupplyRest>(
-      query.split("\n").join("")
+      query.split("\n").join("").replace(/\s/gi, "")
     ).pipe((take(1), tap(res => {
       return res;
     })))

@@ -17,17 +17,18 @@ export class SupplyHistoryTabPage implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
-  getData() {
-    this.subscription = this.eventService.getByDate(new Date()).subscribe(res => console.log(res));
-  }
-
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe;
     }
   }
 
-  //todo : datePicker 및 supply, query날리기 
-  // refresh버튼 만들기
+  // todo: refresh 버튼으로 최신화 하기.
+  // todo: 값 디스플레이하기.
+  getSupplyHistory(date: string) {
+    this.eventService.getSupplyHistoryByDate(new Date(date)).subscribe(res => {
+      console.log(res);
+    })
+  }
 
 }
