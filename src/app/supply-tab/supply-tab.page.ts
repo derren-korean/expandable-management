@@ -68,8 +68,11 @@ export class SupplyTabPage implements OnDestroy {
   // todo: 장갑의 경우 4dx, 220의 수량 차이에 구분을 두어야 함.
   // todo: T2는 장소로만으로도 불출 할 수 있어야 한다.
   sendSupply(data: SupplyData) {
-    this.dEventService.supplyStock(data.device, data.stock).subscribe(res => {
-    })
+    this.dEventService.supplyStock(data.device, data.stock)
+      .subscribe(res => {
+        //todo : 성공 혹은 실패 안내하기
+        console.log(res);
+      })
   }
 
   ngOnDestroy() {
