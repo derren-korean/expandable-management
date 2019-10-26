@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap, take } from 'rxjs/operators';
@@ -14,7 +13,9 @@ interface SupplyRest {
   id?: string,
   type: string,
   terminal: string,
+  category: string,
   deviceName: string,
+  stockName: string,
   createdDate: string,
   serialNumber: string
 }
@@ -51,11 +52,17 @@ export class DeviceEventService {
   }
 
   // firebase 데이터의 특성상 ISO을 사용하므로, 한국시간으로 보려면 new Date(ISOString)을 사용.
+  // 가독성을 위해서 qeury.split 및 join하였음.
   getByDate(date: Date) {
     const startAt = new Date(date.setHours(0, 0, 0, 0)).toISOString();
     const endAt = new Date(date.setHours(23, 59, 59, 999)).toISOString();
-    return this.http.get(
-      `https://${this.projectId}.firebaseio.com/supplyEvent.json?orderBy="createdDate"&startAt="${startAt}"&endAt="${endAt}"&print=pretty`
+    const query = `https://${this.projectId}.firebaseio.com/supplyEvent.json?
+    orderBy="createdDate"&
+    startAt="${startAt}"&
+    endAt="${endAt}"&
+    print=pretty`;
+    return this.http.get<SupplyRest>(
+      query.split("\n").join("")
     ).pipe((take(1), tap(res => {
       return res;
     })))
