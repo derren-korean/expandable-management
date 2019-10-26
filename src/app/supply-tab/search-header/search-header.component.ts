@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
 import { Subscription, BehaviorSubject } from 'rxjs';
 
-import { ItemView, DeviceCommon } from '../../share/device-common';
+import { ItemView, DeviceCommon, SupplyData } from '../../share/device-common';
 import { Device } from '../../share/device.model';
 import { Stock } from '../../share/stock.model';
 import { StockService, StockHouse } from '../../share/stock.service';
@@ -17,6 +17,7 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
   @ViewChild('deviceTerm', { static: true }) deviceTerm: string;
   @Input() deviceChanged = new BehaviorSubject<any>({});
   @Output() termChanged = new EventEmitter<string>();
+  @Output() sendSupply = new EventEmitter<SupplyData>();
 
   private subscription = new Subscription;
   private _stockHouse: StockHouse;
@@ -27,8 +28,7 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private common: DeviceCommon,
-    private stockService: StockService,
-    private dEventService: DeviceEventService
+    private stockService: StockService
   ) { }
 
   ngOnInit() {
@@ -104,19 +104,21 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  supplySotck() {
-    if (this.selectedDevice && this.selectedStock) {
-      console.log(this.selectedDevice, this.selectedStock);
-      this.reset(this.selectedDevice);
-      this.dEventService.supplyStock(this.selectedDevice, this.selectedStock).subscribe(a => {
-      })
-    }
-  }
 
   reset(device: any) {
     this.resetStock();
     this.selectedDevice = null;
     this.deviceTerm = ''; // 자동으로 device 리스트 초기화 trigger함
+  }
+
+  supplySotck() {
+    if (this.selectedDevice && this.selectedStock) {
+      this.sendSupply.emit({
+        device: this.selectedDevice,
+        stock: this.selectedStock
+      });
+      this.reset(this.selectedDevice);
+    }
   }
 
   ngOnDestroy() {

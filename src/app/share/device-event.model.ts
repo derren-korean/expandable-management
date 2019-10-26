@@ -1,4 +1,4 @@
-export declare enum EventType {
+export enum EventType {
   supply = 'SUPPLY',
   failure = 'FAILURE'
 }
@@ -20,11 +20,13 @@ enum WorkingGroup {
 export class DeviceEvent {
   constructor(
     id: string,
-    serialNumber: string,
-    deviceCategory: string,
     type: EventType,
+    terminalNumber: string,
+    deviceCategory: string,
+    deviceName: string,
     createdDate: Date,
-    group: WorkingGroup,
-    userId: string
+    serialNumber: string
+    //group: WorkingGroup,
+    //userId: string
   ) { }
 }

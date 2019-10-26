@@ -2,9 +2,10 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subscription, BehaviorSubject } from 'rxjs';
 
 import { Device } from '../share/device.model';
-import { DeviceCommon } from '../share/device-common';
+import { DeviceCommon, SupplyData } from '../share/device-common';
 import { GroupedDevice } from '../share/grouped-device.model'
 import { GroupedDeviceService } from '../share/grouped-device.service';
+import { DeviceEventService } from '../share/device-event.service';
 
 @Component({
   selector: 'app-supply-tab',
@@ -20,7 +21,8 @@ export class SupplyTabPage implements OnDestroy {
 
   constructor(
     private gDService: GroupedDeviceService,
-    private common: DeviceCommon
+    private common: DeviceCommon,
+    private dEventService: DeviceEventService
   ) { }
 
   ionViewDidEnter() {
@@ -61,6 +63,13 @@ export class SupplyTabPage implements OnDestroy {
 
   getThumbnail(name: string) {
     return this.common.getDeviceImgAddress(name);
+  }
+
+  // todo: 장갑의 경우 4dx, 220의 수량 차이에 구분을 두어야 함.
+  // todo: T2는 장소로만으로도 불출 할 수 있어야 한다.
+  sendSupply(data: SupplyData) {
+    this.dEventService.supplyStock(data.device, data.stock).subscribe(res => {
+    })
   }
 
   ngOnDestroy() {
