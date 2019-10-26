@@ -47,3 +47,16 @@ export class DeviceEventService {
         return res
       }))
   }
+
+  // firebase 데이터의 특성상 ISO을 사용하므로, 한국시간으로 보려면 new Date(ISOString)을 사용.
+  getByDate(date: Date) {
+    const startAt = new Date(date.setHours(0, 0, 0, 0)).toISOString();
+    const endAt = new Date(date.setHours(23, 59, 59, 999)).toISOString();
+    return this.http.get(
+      `https://${this.projectId}.firebaseio.com/supplyEvent.json?orderBy="createdDate"&startAt="${startAt}"&endAt="${endAt}"&print=pretty`
+    ).pipe((take(1), tap(res => {
+      return res;
+    })))
+  }
+}
+
