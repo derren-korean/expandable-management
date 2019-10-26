@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Device } from './device.model';
+import { Stock } from './stock.model';
 
 interface CategoryDeviceData {
   category: string, devices: string[]
@@ -10,6 +12,11 @@ export class ItemView {
     public title: string,
     public subTitles: string[]
   ) { }
+}
+
+export interface SupplyData {
+  device: Device,
+  stock: Stock
 }
 
 @Injectable({

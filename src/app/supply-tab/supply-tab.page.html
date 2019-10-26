@@ -1,4 +1,5 @@
-<app-search-header (termChanged)="setFilteredDevices($event)" [deviceChanged]="changedDevice"></app-search-header>
+<app-search-header (termChanged)="setFilteredDevices($event)" (sendSupply)="sendSupply($event)"
+  [deviceChanged]="changedDevice"></app-search-header>
 <ion-content>
   <ion-row>
     <ion-col size-lg="4" offset-lg="4" size-md="6" offset-md="3">

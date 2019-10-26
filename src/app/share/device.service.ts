@@ -21,6 +21,10 @@ interface DeviceData {
 export class DeviceService {
   private _devices = new BehaviorSubject<Device[]>([]);
 
+  private _createDevice(data: DeviceData): Device {
+    return new Device(null, data.name, data.serialNumber, data.location, data.category);
+  }
+
   constructor(private http: HttpClient, private common: DeviceCommon) {
     this.http.get<DeviceData[]>('../../assets/deviceData.json')
       .forEach(resData => {
@@ -34,10 +38,5 @@ export class DeviceService {
 
   get devices() {
     return this._devices.asObservable();
-  }
-
-  private _createDevice(data: DeviceData): Device {
-
-    return new Device(null, data.name, data.serialNumber, data.location, data.category);
   }
 }
