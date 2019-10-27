@@ -7,5 +7,17 @@
 </ion-header>
 
 <ion-content>
-  <app-datetime-picker (dateChanged)="getSupplyHistory($event)"></app-datetime-picker>
+  <app-datetime-picker [inputDate]="selectedDate" (dateChanged)="getSupplyHistory($event)"></app-datetime-picker>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>QS-B220</ion-card-subtitle>
+      <ion-card-title>Sample Traps</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list class="ion-no-padding">
+        <ion-item class="ion-no-padding">hh/dd | location(seri) | total</ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

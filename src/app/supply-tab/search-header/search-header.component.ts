@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Subscription, BehaviorSubject } from 'rxjs';
 
 import { ItemView, DeviceCommon, SupplyData } from '../../share/device-common';
@@ -6,6 +7,7 @@ import { Device } from '../../share/device.model';
 import { Stock } from '../../share/stock.model';
 import { StockService, StockHouse } from '../../share/stock.service';
 import { DeviceEventService } from '../../share/device-event.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-header',
@@ -28,25 +30,39 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private common: DeviceCommon,
-    private stockService: StockService
+    private stockService: StockService,
+    private http: HttpClient
   ) { }
 
   ngOnInit() {
     this.subscription = this.stockService.stockHouse.subscribe(arr => {
       this._stockHouse = new StockHouse([...arr.stockHouse]);
     });
-    this.subscription.add(
-      this.deviceChanged.subscribe(device => {
-        if (this._stockHouse && this._stockHouse.stockHouse.length) {
-          this.selectedDevice = device;
-          this.setItemView(device.name);
-          this.deviceTerm = device.serialNumber.split('-').pop();
-          if (!device.isChecked) {
-            this.reset(device);
+    this.http.get('../../../assets/addSpecialCaseStocks.json').forEach((data: Stock[]) => {
+      data.forEach(stock => {
+        this.common.CATEGORY_N_DEVICE_MAP.get("ETD").forEach(deviceName => {
+          if (deviceName === stock.deviceNames[0]) {
+            this._stockHouse.stockHouse.forEach(h => {
+              if (h.roomName === deviceName) {
+                h.stockArray.push(new Stock(stock.id, stock.deviceNames, stock.name, stock.alias, stock.unit));
+              }
+            })
           }
-        }
+        })
       })
-    )
+    }).then(() => {
+      this.subscription.add(
+        this.deviceChanged.subscribe(device => {
+          if (device.hasOwnProperty('name') && this._stockHouse && this._stockHouse.stockHouse.length) {
+            this.selectedDevice = device;
+            this.setItemView(device.name);
+            this.deviceTerm = device.serialNumber.split('-').pop();
+            if (!device.isChecked) {
+              this.reset(device);
+            }
+          }
+        }));
+    })
   }
 
   setItemView(name: string) {

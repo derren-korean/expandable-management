@@ -19,13 +19,13 @@ enum WorkingGroup {
 
 export class DeviceEvent {
   constructor(
-    id: string,
-    type: EventType,
-    terminalNumber: string,
-    deviceCategory: string,
-    deviceName: string,
-    createdDate: Date,
-    serialNumber: string
+    public id: string,
+    public type: EventType,
+    public terminalNumber: string,
+    public deviceCategory: string,
+    public deviceName: string,
+    public createdDate: Date,
+    public serialNumber: string
     //group: WorkingGroup,
     //userId: string
   ) { }

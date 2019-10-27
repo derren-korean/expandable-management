@@ -34,6 +34,7 @@ export class StockHouse {
 
 export class StockService {
 
+  public readonly STOCK_N_NAMES_MAP = new BehaviorSubject<Map<string, string[]>>(new Map<string, string[]>());
   private _stocks = new BehaviorSubject<Stock[]>([]);
   private _stockHouse = new BehaviorSubject<StockHouse>(new StockHouse([]));
 
@@ -43,6 +44,10 @@ export class StockService {
 
   get stockHouse() {
     return this._stockHouse.asObservable();
+  }
+
+  getStockNamesMap() {
+    return this.STOCK_N_NAMES_MAP.asObservable();
   }
 
   private _initStockHouse() {
@@ -57,6 +62,14 @@ export class StockService {
     this.http.get<Stock[]>('../../assets/stockList.json')
       .forEach(this._pushStocks).then(() => {
         this._initStockHouse();
+      }).then(() => {
+        const _STOCK_N_NAMES_MAP = new Map<string, string[]>();
+        this.stockHouse.forEach(arr => {
+          arr.stockHouse.forEach(room => {
+            _STOCK_N_NAMES_MAP.set(room.roomName, room.stockArray.map(s => s.name));
+          })
+        })
+        this.STOCK_N_NAMES_MAP.next(_STOCK_N_NAMES_MAP);
       });
   }
 

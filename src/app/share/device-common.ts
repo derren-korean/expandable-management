@@ -32,7 +32,7 @@ export class DeviceCommon {
   public readonly DEVICE_NAME_ARR: string[] = [];
 
   constructor(private http: HttpClient) {
-    this._initCategoryDeviceMap()
+    this._initCategoryDeviceMap();
   }
 
   isSameName(name1: string, name2: string) {
