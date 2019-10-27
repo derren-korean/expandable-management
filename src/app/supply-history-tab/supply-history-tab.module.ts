@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupplyHistoryTabPage } from './supply-history-tab.page';
+import { DatetimePickerComponent } from '../supply-history-tab/datetime-picker/datetime-picker.component';
 
 @NgModule({
   imports: [
@@ -12,6 +13,6 @@ import { SupplyHistoryTabPage } from './supply-history-tab.page';
     FormsModule,
     RouterModule.forChild([{ path: '', component: SupplyHistoryTabPage }])
   ],
-  declarations: [SupplyHistoryTabPage]
+  declarations: [SupplyHistoryTabPage, DatetimePickerComponent]
 })
 export class SupplyHistoryTabPageModule { }
