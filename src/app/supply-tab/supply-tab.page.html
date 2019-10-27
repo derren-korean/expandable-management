@@ -12,9 +12,8 @@
             <!-- <ion-thumbnail slot="start">
               <img [src]="getThumbnail(device.name)">
             </ion-thumbnail> -->
-            <ion-label>
-              <h1>{{ device.location }}</h1>
-              <p>{{ device.serialNumber }}</p>
+            <ion-label>{{ device.location }}
+              <ion-note slot="start">{{ device.serialNumber }}</ion-note>
             </ion-label>
             <ion-checkbox color="primary" slot="end" [(ngModel)]="device.isChecked">
             </ion-checkbox>
