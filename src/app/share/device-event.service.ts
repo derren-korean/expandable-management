@@ -82,7 +82,7 @@ export class DeviceEventService {
               id = deviceEvent.id;
             }
             _temp.push(
-              new DeviceEvent(id, EventType.supply, deviceEvent.terminal, deviceEvent.category, deviceEvent.deviceName, new Date(deviceEvent.createdDate), deviceEvent.serialNumber)
+              new DeviceEvent(id, EventType.supply, deviceEvent.terminal, deviceEvent.category, deviceEvent.deviceName, deviceEvent.stockName, new Date(deviceEvent.createdDate), deviceEvent.serialNumber)
             )
           }
         }

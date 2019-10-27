@@ -24,6 +24,7 @@ export class DeviceEvent {
     public terminalNumber: string,
     public deviceCategory: string,
     public deviceName: string,
+    public stockName: string,
     public createdDate: Date,
     public serialNumber: string
     //group: WorkingGroup,
