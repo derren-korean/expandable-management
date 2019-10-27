@@ -55,9 +55,8 @@ export class StockService {
 
   private _initStocks() {
     this.http.get<Stock[]>('../../assets/stockList.json')
-      .forEach(this._pushStocks).then(() => {
-        this._initStockHouse();
-      });
+      .forEach(this._pushStocks)
+      .then(() => this._initStockHouse());
   }
 
   private _pushStocks = (stocks: Stock[]) => {
