@@ -37,31 +37,35 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.stockService.stockHouse.subscribe(arr => {
       this._stockHouse = new StockHouse([...arr.stockHouse]);
-    });
-    this.http.get('../../../assets/addSpecialCaseStocks.json').forEach((data: Stock[]) => {
-      data.forEach(stock => {
-        this.common.CATEGORY_N_DEVICE_MAP.get("ETD").forEach(deviceName => {
-          if (deviceName === stock.deviceNames[0]) {
-            this._stockHouse.stockHouse.forEach(h => {
-              if (h.roomName === deviceName) {
-                h.stockArray.push(new Stock(stock.id, stock.deviceNames, stock.name, stock.alias, stock.unit));
+      this.http.get('../../../assets/addSpecialCaseStocks.json')
+        .forEach(this.addSpecificStocks)
+        .then(() => {
+          this.subscription.add(
+            this.deviceChanged.subscribe(device => {
+              if (device.hasOwnProperty('name') && this._stockHouse && this._stockHouse.stockHouse.length) {
+                this.selectedDevice = device;
+                this.setItemView(device.name);
+                this.deviceTerm = device.serialNumber.split('-').pop();
+                if (!device.isChecked) {
+                  this.reset(device);
+                }
               }
-            })
-          }
+            }));
         })
-      })
-    }).then(() => {
-      this.subscription.add(
-        this.deviceChanged.subscribe(device => {
-          if (device.hasOwnProperty('name') && this._stockHouse && this._stockHouse.stockHouse.length) {
-            this.selectedDevice = device;
-            this.setItemView(device.name);
-            this.deviceTerm = device.serialNumber.split('-').pop();
-            if (!device.isChecked) {
-              this.reset(device);
+    });
+  }
+
+  addSpecificStocks = (data: Stock[]) => {
+    data.forEach(stock => {
+      this.common.CATEGORY_N_DEVICE_MAP.get("ETD").forEach(deviceName => {
+        if (deviceName === stock.deviceNames[0]) {
+          this._stockHouse.stockHouse.forEach(h => {
+            if (h.roomName === deviceName) {
+              h.stockArray.push(new Stock(stock.id, stock.deviceNames, stock.name, stock.alias, stock.unit));
             }
-          }
-        }));
+          })
+        }
+      })
     })
   }
 
