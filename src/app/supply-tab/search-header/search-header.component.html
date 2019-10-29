@@ -3,11 +3,11 @@
     <ion-title class="ion-no-padding">
       <ion-searchbar placeholder="시리얼 넘버, 장소" [(ngModel)]="deviceTerm" (ionChange)="emitFilterTerm(deviceTerm)">
       </ion-searchbar>
-      <app-autocomplete-searchbar [itemViewArr]="itemViewArr" (itemSelected)="changeSandMode($event)"
+      <app-autocomplete-searchbar [itemViewArr]="itemViewArr" (itemSelected)="showSendButton($event)"
         *ngIf="selectedDevice">
       </app-autocomplete-searchbar>
     </ion-title>
-    <div slot="secondary" class="ion-padding" *ngIf="isDeviceAndSotckSelected">
+    <div slot="secondary" class="ion-padding" *ngIf="selectedDevice && selectedStock">
       <ion-button fill="solid" color="light" type="button" (click)="supplySotck()">
         <ion-icon color="primary" name="paper-plane"></ion-icon>
         <!-- <ion-badge color="danger">1</ion-badge> -->

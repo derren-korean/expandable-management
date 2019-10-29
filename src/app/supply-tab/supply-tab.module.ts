@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { SupplyTabPage } from './supply-tab.page';
 import { AutocompleteSearchbarComponent } from '../share/autocomplete-searchbar/autocomplete-searchbar.component';
 import { SearchHeaderComponent } from './search-header/search-header.component';
+import { DeviceListComponent } from './device-list/device-list.component';
+import { SupplyTabService } from './supply-tab.service';
 
 @NgModule({
   imports: [
@@ -14,6 +16,7 @@ import { SearchHeaderComponent } from './search-header/search-header.component';
     FormsModule,
     RouterModule.forChild([{ path: '', component: SupplyTabPage }])
   ],
-  declarations: [SupplyTabPage, AutocompleteSearchbarComponent, SearchHeaderComponent]
+  providers: [SupplyTabService],
+  declarations: [SupplyTabPage, AutocompleteSearchbarComponent, SearchHeaderComponent, DeviceListComponent]
 })
 export class SupplyTabPageModule { }

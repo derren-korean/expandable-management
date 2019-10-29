@@ -50,7 +50,7 @@ export class DeviceEventService {
         "stockName": stock.name,
         "createdDate": new Date().toISOString(),
         "serialNumber": device.serialNumber,
-        "srialname": device.location
+        "location": device.location
       }).pipe(take(1), tap(res => {
         return res;
       }))
