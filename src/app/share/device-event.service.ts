@@ -7,7 +7,6 @@ import { environment } from '../../environments/environment';
 import { Stock } from './stock.model';
 import { Device } from './device.model';
 import { DeviceEvent, EventType } from './device-event.model';
-import { SupplyData } from './device-common';
 
 interface SupplyRest {
   id?: string,
@@ -17,7 +16,8 @@ interface SupplyRest {
   deviceName: string,
   stockName: string,
   createdDate: string,
-  serialNumber: string
+  serialNumber: string,
+  location: string // 불출 당시의 장소
 }
 
 interface SupplyRestRes {
@@ -49,7 +49,8 @@ export class DeviceEventService {
         "deviceName": device.name,
         "stockName": stock.name,
         "createdDate": new Date().toISOString(),
-        "serialNumber": device.serialNumber
+        "serialNumber": device.serialNumber,
+        "srialname": device.location
       }).pipe(take(1), tap(res => {
         return res;
       }))
@@ -82,7 +83,7 @@ export class DeviceEventService {
               id = deviceEvent.id;
             }
             _temp.push(
-              new DeviceEvent(id, EventType.supply, deviceEvent.terminal, deviceEvent.category, deviceEvent.deviceName, deviceEvent.stockName, new Date(deviceEvent.createdDate), deviceEvent.serialNumber)
+              new DeviceEvent(id, EventType.supply, deviceEvent.terminal, deviceEvent.category, deviceEvent.deviceName, deviceEvent.stockName, new Date(deviceEvent.createdDate), deviceEvent.serialNumber.split("-").pop(), deviceEvent.location)
             )
           }
         }
@@ -90,5 +91,16 @@ export class DeviceEventService {
       })
     )
   }
+
+  // // // 네트웍 안될때 가상의 데이터 만들기
+  // getSupplyHistoryByDate(date: Date) {
+  //   return this.http.get<SupplyRest[]>('../../../assets/noNetworkData.json').pipe(take(1), map(data => {
+  //     const temp: DeviceEvent[] = [];
+  //     data.forEach(res => {
+  //       temp.push(new DeviceEvent(res.id, EventType.supply, res.terminal, res.category, res.deviceName, res.stockName, new Date(res.createdDate), res.serialNumber.split("-").pop(), res.location));
+  //     })
+  //     return temp;
+  //   }))
+  // }
 }
 

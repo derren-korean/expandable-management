@@ -8,7 +8,6 @@ import { IonDatetime } from '@ionic/angular';
 })
 export class DatetimePickerComponent implements OnInit {
   @ViewChild('datetimePicker', { static: true }) datetimePicker: IonDatetime;
-  @Input() inputDate: string;
   @Output() dateChanged = new EventEmitter<string>();
 
   customPickerOptions: any;
@@ -29,7 +28,7 @@ export class DatetimePickerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.datetimePicker.value = this.inputDate;
+    this.datetimePicker.value = new Date().toISOString();
     this.dateChanged.emit(this.datetimePicker.value);
   }
 

@@ -26,7 +26,8 @@ export class DeviceEvent {
     public deviceName: string,
     public stockName: string,
     public createdDate: Date,
-    public serialNumber: string
+    public serialNumber: string,
+    public location: string
     //group: WorkingGroup,
     //userId: string
   ) { }
