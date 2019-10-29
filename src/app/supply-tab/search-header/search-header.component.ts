@@ -37,21 +37,17 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.stockService.stockHouse.subscribe(arr => {
       this._stockHouse = new StockHouse([...arr.stockHouse]);
-      this.http.get('../../../assets/addSpecialCaseStocks.json')
-        .forEach(this.addSpecificStocks)
-        .then(() => {
-          this.subscription.add(
-            this.deviceChanged.subscribe(device => {
-              if (device.hasOwnProperty('name') && this._stockHouse && this._stockHouse.stockHouse.length) {
-                this.selectedDevice = device;
-                this.setItemView(device.name);
-                this.deviceTerm = device.serialNumber.split('-').pop();
-                if (!device.isChecked) {
-                  this.reset(device);
-                }
-              }
-            }));
-        })
+      this.subscription.add(
+        this.deviceChanged.subscribe(device => {
+          if (device.hasOwnProperty('name') && this._stockHouse && this._stockHouse.stockHouse.length) {
+            this.selectedDevice = device;
+            this.setItemView(device.name);
+            this.deviceTerm = device.serialNumber.split('-').pop();
+            if (!device.isChecked) {
+              this.reset(device);
+            }
+          }
+        }));
     });
   }
 
