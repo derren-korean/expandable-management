@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, from } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, take } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 
 import { environment } from '../../environments/environment';
@@ -25,7 +25,7 @@ export class AuthService implements OnDestroy {
   private activeLogoutTimer: any;
 
   get userIsAuthenticated() {
-    return this._user.asObservable().pipe(
+    return this._user.asObservable().pipe(take(1),
       map(user => {
         if (user) {
           return !!user.token;
@@ -37,7 +37,7 @@ export class AuthService implements OnDestroy {
   }
 
   get userId() {
-    return this._user.asObservable().pipe(
+    return this._user.asObservable().pipe(take(1),
       map(user => {
         if (user) {
           return user.id;
@@ -49,7 +49,7 @@ export class AuthService implements OnDestroy {
   }
 
   get token() {
-    return this._user.asObservable().pipe(
+    return this._user.asObservable().pipe(take(1),
       map(user => {
         if (user) {
           return user.token;
@@ -63,7 +63,7 @@ export class AuthService implements OnDestroy {
   constructor(private http: HttpClient) { }
 
   autoLogin() {
-    return from(Plugins.Storage.get({ key: 'authData' })).pipe(
+    return from(Plugins.Storage.get({ key: 'authData' })).pipe(take(1),
       map(storedData => {
         if (!storedData || !storedData.value) {
           return null;
@@ -106,7 +106,7 @@ export class AuthService implements OnDestroy {
         }`,
         { email: email, password: password, returnSecureToken: true }
       )
-      .pipe(tap(this.setUserData.bind(this)));
+      .pipe(take(1), tap(this.setUserData.bind(this)));
   }
 
   login(email: string, password: string) {
@@ -117,7 +117,7 @@ export class AuthService implements OnDestroy {
         }`,
         { email: email, password: password, returnSecureToken: true }
       )
-      .pipe(tap(this.setUserData.bind(this)));
+      .pipe(take(1), tap(this.setUserData.bind(this)));
   }
 
   logout() {
