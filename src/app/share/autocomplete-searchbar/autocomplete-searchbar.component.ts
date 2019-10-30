@@ -26,7 +26,11 @@ export class AutocompleteSearchbarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.itemViewArr.subscribe(itemViewArr => {
       this._itemViewArr = itemViewArr;
-      this.fillSearchbarText(null);
+      this.searchbar.getInputElement().then((el) => {
+        if (el.value) {
+          this.fillSearchbarText(null);
+        }
+      })
     })
     this.searchbar.setFocus();
   }
@@ -69,7 +73,6 @@ export class AutocompleteSearchbarComponent implements OnInit, OnDestroy {
   }
 
   filterItems(ev: any) {
-    this.itemSelected.emit(null);
     const term: string = ev.target.value;
     if (term && term.trim() != '') {
       this.listActive = true;

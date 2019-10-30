@@ -70,7 +70,7 @@ export class DeviceListComponent implements OnInit {
     if (device && this._lastSelectedDevice && this._lastSelectedDevice.isChecked && device.isChecked) {
       this._lastSelectedDevice.isChecked = false;
     }
-    this._lastSelectedDevice = device;
+    this._lastSelectedDevice = { ...device };
     this.supplyTabService.setDevice(device);
   }
 

@@ -2,5 +2,7 @@
   <app-search-header></app-search-header>
 </ion-header>
 <ion-content>
+  <app-autocomplete-searchbar [itemViewArr]="itemViewArr" (itemSelected)="setStock($event)" *ngIf="selectedDevice">
+  </app-autocomplete-searchbar>
   <app-device-list></app-device-list>
 </ion-content>

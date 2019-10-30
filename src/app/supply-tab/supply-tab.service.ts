@@ -1,5 +1,5 @@
-import { SupplyTabPageModule } from './supply-tab.module';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+
 import { Device } from '../share/device.model';
 import { Stock } from '../share/stock.model';
 import { DeviceEventService } from '../share/device-event.service';
@@ -10,6 +10,7 @@ export class SupplyTabService {
 
   private device = new BehaviorSubject<any>(null);
   private term = new BehaviorSubject<string>('');
+  private stockTitle = new BehaviorSubject<string>(null);
 
   // todo: T2는 장소로만으로도 불출 할 수 있어야 한다.
   saveSupply(device: Device, stock: Stock) {
@@ -18,6 +19,14 @@ export class SupplyTabService {
         //todo : 성공 혹은 실패 안내하기
         console.log(res);
       })
+  }
+
+  changeStockTitle() {
+    return this.stockTitle.asObservable();
+  }
+
+  setStockTitle(title: any) {
+    this.stockTitle.next(title);
   }
 
   changeDevice() {

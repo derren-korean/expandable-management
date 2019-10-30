@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Output, EventEmitter, Input, OnDestroy } 
 import { HttpClient } from '@angular/common/http';
 import { Subscription, BehaviorSubject } from 'rxjs';
 
-import { ItemView, DeviceCommon, SupplyData } from '../../share/device-common';
+import { DeviceCommon, SupplyData } from '../../share/device-common';
 import { Device } from '../../share/device.model';
 import { Stock } from '../../share/stock.model';
 import { StockService, StockHouse } from '../../share/stock.service';
@@ -22,9 +22,8 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
 
   private subscription = new Subscription;
   private _stockHouse: StockHouse;
-  private selectedDevice: Device;
-  private selectedStock: Stock;
-  itemViewArr = new BehaviorSubject<ItemView[]>([]);
+  private selectedDevice: Device = null;
+  private selectedStock: Stock = null;
 
   constructor(
     private common: DeviceCommon,
@@ -36,41 +35,24 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.stockService.stockHouse.subscribe(arr => {
       this._stockHouse = new StockHouse([...arr.stockHouse]);
+
       this.subscription.add(
         this.supplyTabService.changeDevice().subscribe(device => {
-          if (device && device.hasOwnProperty('name') && this._stockHouse && this._stockHouse.stockHouse.length) {
+          if (device && this._stockHouse && this._stockHouse.stockHouse.length) {
             this.selectedDevice = device;
-            this.setItemView(device.name);
             this.deviceTerm = device.serialNumber.split('-').pop();
             if (!device.isChecked) {
               this.reset(device);
             }
           }
         })
-      );
+      )
     });
-  }
-
-  setItemView(name: string) {
-    const _temp: ItemView[] = [];
-    this._stockHouse.stockHouse.forEach(stockRoom => {
-      if (this.common.isSameName(stockRoom.roomName, name)) {
-        for (const stock of stockRoom.stockArray) {
-          let _tempArr = [];
-          if (stock.alias && stock.alias.length) {
-            _tempArr = [...stock.alias];
-          }
-          _temp.push(new ItemView(stock.name, _tempArr));
-        }
-      }
-    })
-    this.itemViewArr.next(_temp);
-  }
-
-  resetItemView() {
-    if (this.selectedDevice) {
-      this.setItemView(this.selectedDevice.name);
-    }
+    this.subscription.add(
+      this.supplyTabService.changeStockTitle().subscribe(title => {
+        this.selectStock(title);
+      })
+    )
   }
 
   emitFilterTerm(term: string) {
@@ -79,29 +61,29 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
       this.selectedDevice = null;
     }
     this.selectedStock = null;
-    this.resetItemView(); // 검색 조건이 변경될 때마다 ItemView(autocomplete-searchbar) 리셋.
     this.supplyTabService.setTerm(term);
   }
 
-  selectStock(title) {
-    let _stock: Stock;
+  selectStock(stockTitle: string) {
+    if (!stockTitle || !stockTitle.length) {
+      this.selectedStock = null;
+      return;
+    }
+    this.selectedStock = this._getStock(stockTitle)
+  }
+
+  private _getStock(title: string) {
+    let stock: Stock = null;
     this._stockHouse.stockHouse.forEach(stockRoom => {
       if (this.common.isSameName(stockRoom.roomName, this.selectedDevice.name)) {
-        this.selectedStock = stockRoom.stockArray.find(stock => {
+        stock = stockRoom.stockArray.find(stock => {
           return this.common.isSameName(stock.name, title) || stock.alias.some(alias => this.common.isSameName(alias, title))
         })
+        if (stock) return false;
       }
     })
+    return stock;
   }
-
-  showSendButton(title: string) {
-    if (title && title.length) {
-      this.selectStock(title);
-    } else {
-      this.selectedStock = null;
-    }
-  }
-
 
   reset(device: any) {
     this.selectedStock = null;
@@ -110,10 +92,8 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
   }
 
   supplySotck() {
-    if (this.selectedDevice && this.selectedStock) {
-      this.supplyTabService.saveSupply(this.selectedDevice, this.selectedStock);
-      this.reset(this.selectedDevice);
-    }
+    this.supplyTabService.saveSupply(this.selectedDevice, this.selectedStock);
+    this.reset(this.selectedDevice);
   }
 
   ngOnDestroy() {
