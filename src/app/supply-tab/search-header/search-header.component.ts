@@ -22,8 +22,8 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
 
   private subscription = new Subscription;
   private _stockHouse: StockHouse;
-  private selectedDevice: Device = null;
-  private selectedStock: Stock = null;
+  selectedDevice: Device = null;
+  selectedStock: Stock = null;
 
   constructor(
     private common: DeviceCommon,

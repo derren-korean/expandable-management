@@ -27,16 +27,17 @@ export class ExpandableLedgerComponent implements OnInit, OnDestroy {
 
   @Input() date = new BehaviorSubject<string>('');
   private subscription = new Subscription;
-  private expandableBook: ExpandableChart[] = [];
+  expandableBook: ExpandableChart[] = [];
 
   constructor(private common: DeviceCommon, private eventService: DeviceEventService) { }
 
   ngOnInit() {
     this.subscription = this.date.subscribe(_date => {
-      this.subscription.add(this.eventService.getSupplyHistoryByDate(new Date(_date)).subscribe((deviceEvents: DeviceEvent[]) => {
-        //order by : deviceCategory | stockOrder
-        this.setBook(deviceEvents);
-      }));
+      this.subscription.add(this.eventService.getSupplyHistoryByDate(new Date(_date))
+        .subscribe((deviceEvents: DeviceEvent[]) => {
+          //order by : deviceCategory | stockOrder
+          this.setBook(deviceEvents);
+        }));
     })
   }
 

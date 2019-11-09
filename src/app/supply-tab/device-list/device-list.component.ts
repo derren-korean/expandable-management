@@ -15,7 +15,7 @@ import { SupplyTabService } from '../supply-tab.service';
 export class DeviceListComponent implements OnInit {
 
   private deviceSub = new Subscription;
-  private filteredDevices: GroupedDevice[] = [];
+  filteredDevices: GroupedDevice[] = [];
   private groupedDevices: GroupedDevice[] = [];
   private _lastSelectedDevice: any;
 

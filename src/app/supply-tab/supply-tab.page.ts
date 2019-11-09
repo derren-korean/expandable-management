@@ -17,7 +17,7 @@ import { StockService } from '../share/stock.service';
 export class SupplyTabPage implements OnInit {
 
   itemViewArr = new BehaviorSubject<ItemView[]>([]);
-  private selectedDevice = null;
+  selectedDevice = null;
 
   constructor(
     private supplyTabService: SupplyTabService,

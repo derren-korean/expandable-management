@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { Stock } from './stock.model';
 import { Device } from './device.model';
 import { DeviceEvent, EventType } from './device-event.model';
+import { AuthService } from '../auth/auth.service';
 
 interface SupplyRest {
   id?: string,
@@ -33,16 +34,21 @@ export class DeviceEventService {
 
   constructor(
     private http: HttpClient,
-    private dEventService: DeviceEventService
+    private dEventService: DeviceEventService,
+    private authService: AuthService
   ) {
     this.projectId = environment.firebase.projectId;
   }
 
   supplyStock(device: Device, stock: Stock) {
+    let token;
+    this.authService.token.subscribe(_token => token = _token);
+    let userId;
+    this.authService.userId.subscribe(_userId => userId = _userId)
     return this.http.post(
-      `https://${this.projectId}.firebaseio.com/supplyEvent.json`,
+      `https://${this.projectId}.firebaseio.com/supplyEvent.json?auth=${token}`,
       {
-        "id": null,
+        "id": userId,
         "type": EventType.supply,
         "terminal": "1", // user.terminal
         "category": device.category,
@@ -59,13 +65,18 @@ export class DeviceEventService {
   // firebase 데이터의 특성상 ISO을 사용하므로, 한국시간으로 보려면 new Date(ISOString)을 사용.
   // qeury가독성을 위해 split, join, replace를 사용함.
   getSupplyHistoryByDate(date: Date): Observable<DeviceEvent[]> {
-    const startAt = new Date(date.setHours(0, 0, 0, 0)).toISOString();
-    const endAt = new Date(date.setHours(23, 59, 59, 999)).toISOString();
+    let token;
+    this.authService.token.subscribe(_token => token = _token);
+    // 비니지스 아워: 9 to next day 8.
+    const startAt = new Date(date.setHours(9, 0, 0, 0)).toISOString();
+    date.setDate(date.getDate() + 1);
+    const endAt = new Date(date.setHours(8, 59, 59, 999)).toISOString();
     const query = `https://${this.projectId}.firebaseio.com/supplyEvent.json?
     orderBy="createdDate"&
     startAt="${startAt}"&
     endAt="${endAt}"&
-    print=pretty`;
+    print=pretty&
+    auth=${token}`;
     return this.http.get<SupplyRestRes>(
       query.split("\n").join("").replace(/\s/gi, "")
     ).pipe(

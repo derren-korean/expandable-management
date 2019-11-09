@@ -17,8 +17,8 @@ export class AutocompleteSearchbarComponent implements OnInit, OnDestroy {
 
   private subscription = new Subscription;
   private _itemViewArr: ItemView[] = [];
-  private listActive = false;
-  private items: ItemView[] = [];
+  listActive = false;
+  items: ItemView[] = [];
   private cho_sung: string[] = ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
 
   constructor(private common: DeviceCommon) { }

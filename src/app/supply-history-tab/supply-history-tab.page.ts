@@ -8,7 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class SupplyHistoryTabPage {
 
-  private selectedDate = new BehaviorSubject<string>('');
+  selectedDate = new BehaviorSubject<string>('');
   private _date: string = '';
 
   constructor() { }
