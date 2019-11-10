@@ -1,8 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, from } from 'rxjs';
-import { map, tap, take } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
+import { BehaviorSubject, from, empty } from 'rxjs';
+import { take, map, tap } from 'rxjs/operators';
+
 
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
@@ -126,6 +127,17 @@ export class AuthService implements OnDestroy {
     }
     this._user.next(null);
     Plugins.Storage.remove({ key: 'authData' });
+  }
+
+  isAuthorized(): Observable<boolean> {
+    let id
+    let token;
+    this.token.subscribe(_token => token = _token);
+    this.userId.subscribe(_id => id = _id);
+    if (!id || !token) {
+      return empty();
+    }
+    return this.http.get<boolean>(`https://${environment.firebase.projectId}.firebaseio.com/authorizedUser/${id}.json?auth=${token}`).pipe(take(1), map(isAuthorized => isAuthorized));
   }
 
   ngOnDestroy() {

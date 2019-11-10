@@ -38,10 +38,17 @@ export class AuthPage implements OnInit {
         }
         authObs.subscribe(
           resData => {
-            console.log(resData);
             this.isLoading = false;
             loadingEl.dismiss();
-            this.router.navigateByUrl('tabs/supply');
+            this.authService.isAuthorized().subscribe(isAuthorized => {
+              if (!isAuthorized) {
+                this.authService.logout();
+                this.showAlert('접속 승인 후 사용하세요~');
+                this.router.navigateByUrl('auth');
+                return;
+              }
+              this.router.navigateByUrl('tabs/supply');
+            })
           },
           errRes => {
             loadingEl.dismiss();
@@ -78,7 +85,7 @@ export class AuthPage implements OnInit {
   private showAlert(message: string) {
     this.alertCtrl
       .create({
-        header: 'Authentication failed',
+        header: '인증 실패',
         message: message,
         buttons: ['확인']
       })
