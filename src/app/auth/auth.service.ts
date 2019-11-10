@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Plugins } from '@capacitor/core';
-import { BehaviorSubject, from, empty } from 'rxjs';
+import { BehaviorSubject, from, empty, Observable } from 'rxjs';
 import { take, map, tap } from 'rxjs/operators';
 
 
