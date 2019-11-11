@@ -4,7 +4,6 @@ import { Plugins } from '@capacitor/core';
 import { BehaviorSubject, from, empty, Observable } from 'rxjs';
 import { take, map, tap } from 'rxjs/operators';
 
-
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
 
@@ -129,6 +128,7 @@ export class AuthService implements OnDestroy {
     Plugins.Storage.remove({ key: 'authData' });
   }
 
+  // check authorization via database.
   isAuthorized(): Observable<boolean> {
     let id
     let token;
