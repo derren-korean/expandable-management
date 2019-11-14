@@ -40,7 +40,13 @@ export class AuthPage implements OnInit, OnDestroy {
             this.authenticate(kakaoUser.email, kakaoUser.pw);
           })
       }
-    })
+    }).add(
+      this.kakaoService.kakaoCode.subscribe(code => {
+        if (code) {
+          console.log(code);
+        }
+      })
+    )
   }
 
   authenticate(email: string, password: string) {

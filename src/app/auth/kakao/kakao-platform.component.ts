@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { AuthKakaoService } from './auth.kakao.service';
 import { environment } from '../../../environments/environment';
-import '../../../assets/js/kakao.min.js';
-declare const Kakao: any;
+
 
 @Component({
   selector: 'app-kakao-platform',
@@ -12,14 +11,16 @@ declare const Kakao: any;
 })
 export class KakaoPlatformComponent implements OnInit {
 
+  private app_key:string = environment.kakao.restAPIKey;
+  private redirect_uri:string = window.location.origin + '/kakaoCallback';
+  kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${this.app_key}&redirect_uri=${this.redirect_uri}&response_type=code`;
+
   kakaoLoginImgUrl: string = "../../assets/kakao_account_login_btn_medium_narrow.png";
   constructor(private kakaoService: AuthKakaoService) { }
 
-  ngOnInit() {
-    Kakao.init(environment.kakao.javaScriptKey);
-  }
+  ngOnInit() {}
 
-  onKakaoLogin() {
-    this.kakaoService.login();
+  kakaoLogin() {
+    Plugins.Browser.open({url: this.kakaoUrl});
   }
 }

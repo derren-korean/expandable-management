@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { GroupedDeviceService } from '../../share/grouped-device.service';
-import { Subscription, BehaviorSubject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { GroupedDevice } from '../../share/grouped-device.model';
 import { Device } from '../../share/device.model';
-import { SearchHeaderComponent } from '../search-header/search-header.component';
 import { DeviceCommon } from '../../share/device-common';
 import { SupplyTabService } from '../supply-tab.service';
 

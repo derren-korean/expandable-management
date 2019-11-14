@@ -4,12 +4,13 @@ import { Observable, of } from 'rxjs';
 import { take, tap, switchMap } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
+import { AuthKakaoService } from './kakao/auth.kakao.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanLoad {
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private kakaoAuth: AuthKakaoService) { }
 
   canLoad(
     route: Route,
@@ -26,6 +27,10 @@ export class AuthGuard implements CanLoad {
       }),
       tap(isAuthenticated => {
         if (!isAuthenticated) {
+          if (window.location.pathname === '/kakaoCallback') {
+            const code = window.location.search.substring(window.location.search.indexOf('=')+1);
+            this.kakaoAuth.setKakaoCode(code);
+          }
           this.router.navigateByUrl('/auth');
         }
         this.authService.isAuthorized().subscribe(isAuthorized => {
