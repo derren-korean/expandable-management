@@ -1,25 +1,8 @@
-<app-search-header (termChanged)="setFilteredDevices($event)" (sendSupply)="sendSupply($event)"
-  [deviceChanged]="changedDevice"></app-search-header>
+<ion-header>
+  <app-search-header></app-search-header>
+</ion-header>
 <ion-content>
-  <ion-row>
-    <ion-col size-lg="4" offset-lg="4" size-md="6" offset-md="3">
-      <ion-card *ngFor="let grouped of filteredDevices">
-        <ion-item-divider color="primary">
-          {{ grouped.section }}
-        </ion-item-divider>
-        <ion-virtual-scroll [items]="grouped.devices" approxItemHeight="320px">
-          <ion-item *virtualItem="let device" (click)="changeDevice(device)">
-            <!-- <ion-thumbnail slot="start">
-              <img [src]="getThumbnail(device.name)">
-            </ion-thumbnail> -->
-            <ion-label>{{ device.location }}
-              <ion-note slot="start">{{ device.serialNumber }}</ion-note>
-            </ion-label>
-            <ion-checkbox color="primary" slot="end" [(ngModel)]="device.isChecked">
-            </ion-checkbox>
-          </ion-item>
-        </ion-virtual-scroll>
-      </ion-card>
-    </ion-col>
-  </ion-row>
+  <app-autocomplete-searchbar [itemViewArr]="itemViewArr" (itemSelected)="setStock($event)" *ngIf="selectedDevice">
+  </app-autocomplete-searchbar>
+  <app-device-list></app-device-list>
 </ion-content>

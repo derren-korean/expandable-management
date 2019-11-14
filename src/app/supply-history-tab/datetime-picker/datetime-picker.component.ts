@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { IonDatetime } from '@ionic/angular';
 
 @Component({

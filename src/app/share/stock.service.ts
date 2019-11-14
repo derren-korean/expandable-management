@@ -1,6 +1,7 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
+import { take, switchMap } from 'rxjs/operators';
 
 import { Stock } from './stock.model';
 import { DeviceCommon } from './device-common';
@@ -43,6 +44,12 @@ export class StockService {
 
   get stockHouse() {
     return this._stockHouse.asObservable();
+  }
+
+  getStocks(roomName: string) {
+    return this.stockHouse.pipe(take(1), switchMap((house: StockHouse) => {
+      return house.stockHouse.filter(room => room.roomName === roomName);
+    }))
   }
 
   private _initStockHouse() {

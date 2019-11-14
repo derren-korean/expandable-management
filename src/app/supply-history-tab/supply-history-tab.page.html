@@ -4,10 +4,9 @@
       불출 내역
     </ion-title>
   </ion-toolbar>
+  <app-datetime-picker (dateChanged)="changeDate($event)"></app-datetime-picker>
 </ion-header>
 
 <ion-content>
-  <app-datetime-picker (dateChanged)="changeDate($event)"></app-datetime-picker>
-  <app-expandable-ledger [date]="selectedDate">
-  </app-expandable-ledger>
+  <app-expandable-ledger [date]="selectedDate"></app-expandable-ledger>
 </ion-content>
