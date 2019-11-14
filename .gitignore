@@ -33,3 +33,19 @@ npm-debug.log*
 /src/environments
 
 package-lock\.json
+
+*.lock
+
+*.bin
+
+*.properties
+
+android/
+
+resources/
+
+capacitor\.config\.json
+
+config\.xml
+
+ionic\.config\.json
