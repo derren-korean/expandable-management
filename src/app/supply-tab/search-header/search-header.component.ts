@@ -1,13 +1,11 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subscription, BehaviorSubject } from 'rxjs';
+import { Subscription } from 'rxjs';
 
-import { DeviceCommon, SupplyData } from '../../share/device-common';
+import { DeviceCommon} from '../../share/device-common';
 import { Device } from '../../share/device.model';
 import { Stock } from '../../share/stock.model';
 import { StockService, StockHouse } from '../../share/stock.service';
-import { DeviceEventService } from '../../share/device-event.service';
-import { tap } from 'rxjs/operators';
 import { SupplyTabService } from '../supply-tab.service';
 
 @Component({
@@ -28,8 +26,7 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
   constructor(
     private common: DeviceCommon,
     private stockService: StockService,
-    private supplyTabService: SupplyTabService,
-    private http: HttpClient
+    private supplyTabService: SupplyTabService
   ) { }
 
   ngOnInit() {

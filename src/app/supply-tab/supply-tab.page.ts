@@ -1,13 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-
-import { Device } from '../share/device.model';
-import { DeviceCommon, SupplyData, ItemView } from '../share/device-common';
-import { GroupedDevice } from '../share/grouped-device.model'
-import { GroupedDeviceService } from '../share/grouped-device.service';
-import { DeviceEventService } from '../share/device-event.service';
+import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+
 import { SupplyTabService } from './supply-tab.service';
 import { StockService } from '../share/stock.service';
+import { ItemView } from '../share/device-common';
 
 @Component({
   selector: 'app-supply-tab',

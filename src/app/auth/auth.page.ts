@@ -1,20 +1,18 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { Observable, Subscription } from 'rxjs';
 
 import { AuthService, AuthResponseData } from './auth.service';
-import { AuthKakaoService } from './kakao/auth.kakao.service';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.page.html',
   styleUrls: ['./auth.page.scss']
 })
-export class AuthPage implements OnInit, OnDestroy {
+export class AuthPage implements OnInit {
 
-  private subscription: Subscription;
   isLoading = false;
   isLogin = true;
 
@@ -22,26 +20,10 @@ export class AuthPage implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private loadingCtrl: LoadingController,
-    private alertCtrl: AlertController,
-    private kakaoService: AuthKakaoService
+    private alertCtrl: AlertController
   ) { }
 
-  ngOnInit() {
-    this.subscription = this.kakaoService.loginWithKakao().subscribe((kakaoUser: { email: string, pw: string }) => {
-      if (kakaoUser) {
-        let authObs: Observable<AuthResponseData>;
-        this.authService.login(kakaoUser.email, kakaoUser.pw).subscribe(
-          hasAccount => {
-            this.isLogin = true;
-          },
-          noAccount => {
-            this.isLogin = false;
-          }).add(complete => {
-            this.authenticate(kakaoUser.email, kakaoUser.pw);
-          })
-      }
-    })
-  }
+  ngOnInit() {}
 
   authenticate(email: string, password: string) {
     this.isLoading = true;
@@ -109,11 +91,5 @@ export class AuthPage implements OnInit, OnDestroy {
         buttons: ['확인']
       })
       .then(alertEl => alertEl.present());
-  }
-
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe()
-    }
   }
 }

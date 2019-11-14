@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
 
 import { Device } from './device.model';
 import { GroupedDevice } from './grouped-device.model';
