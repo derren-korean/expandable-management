@@ -1,0 +1,10 @@
+<ion-item (click)="changeDevice(device)">
+  <!-- <ion-thumbnail slot="start">
+      <img [src]="getThumbnail(device.name)">
+    </ion-thumbnail> -->
+  <ion-label>{{ device.location }}
+    <ion-note slot="start">{{ device.serialNumber }}</ion-note>
+  </ion-label>
+  <ion-checkbox color="primary" slot="end" [(ngModel)]="device.isChecked">
+  </ion-checkbox>
+</ion-item>

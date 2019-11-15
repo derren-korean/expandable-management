@@ -50,7 +50,7 @@ export class DeviceEventService {
       {
         "id": userId,
         "type": EventType.supply,
-        "terminal": "1", // user.terminal
+        "terminal": device.terminalNumber,
         "category": device.category,
         "deviceName": device.name,
         "stockName": stock.name,

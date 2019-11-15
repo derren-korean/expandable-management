@@ -1,46 +1,47 @@
-import { Component, OnInit } from '@angular/core';
-import { GroupedDeviceService } from '../../share/grouped-device.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+
+import { GroupedDeviceService } from '../../share/grouped-device.service';
 import { GroupedDevice } from '../../share/grouped-device.model';
 import { Device } from '../../share/device.model';
-import { DeviceCommon } from '../../share/device-common';
-import { SupplyTabService } from '../supply-tab.service';
+import { SupplyTabService, DeviceView } from '../supply-tab.service';
 
 @Component({
   selector: 'app-device-list',
   templateUrl: './device-list.component.html',
   styleUrls: ['./device-list.component.scss'],
 })
-export class DeviceListComponent implements OnInit {
+export class DeviceListComponent implements OnInit, OnDestroy {
 
-  private deviceSub = new Subscription;
   filteredDevices: GroupedDevice[] = [];
+  private deviceSub = new Subscription;
   private groupedDevices: GroupedDevice[] = [];
-  private _lastSelectedDevice: any;
 
   constructor(
-    private common: DeviceCommon,
     private gDService: GroupedDeviceService,
     private supplyTabService: SupplyTabService
   ) { }
 
+    // TODO : 장비가 바뀔때 만, resetSelectedDevice를 실행 해야 함.
   ngOnInit() {
     this.deviceSub = this.gDService.groupedDevices.subscribe(groupedDevices => {
       this.groupedDevices = [...groupedDevices];
       this.setFilteredDevices(null);
-    });
-    this.deviceSub.add(
-      this.supplyTabService.changeTerm().subscribe(term => {
+    }).add(
+      this.supplyTabService.term.subscribe(term => {
         this.setFilteredDevices(term);
       })
     );
   }
 
   resetSelectedDevice() {
-    if (this._lastSelectedDevice && this._lastSelectedDevice.isChecked) {
-      this._lastSelectedDevice.isChecked = false;
-      this.changeDevice(null);
-    }
+    this.filteredDevices.forEach(groupedDevices => {
+      groupedDevices.devices.forEach((device: DeviceView) => {
+        if (device.isChecked) {
+          device.isChecked = false;
+        }
+      })
+    })
   }
 
   setFilteredDevices(term: string) {
@@ -63,18 +64,6 @@ export class DeviceListComponent implements OnInit {
     if (this.filteredDevices.length > 1) {
       this.resetSelectedDevice();
     }
-  }
-
-  changeDevice(device: any) {
-    if (device && this._lastSelectedDevice && this._lastSelectedDevice.isChecked && device.isChecked) {
-      this._lastSelectedDevice.isChecked = false;
-    }
-    this._lastSelectedDevice = { ...device };
-    this.supplyTabService.setDevice(device);
-  }
-
-  getThumbnail(name: string) {
-    return this.common.getDeviceImgAddress(name);
   }
 
   ngOnDestroy() {

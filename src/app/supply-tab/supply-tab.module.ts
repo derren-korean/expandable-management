@@ -8,6 +8,7 @@ import { AutocompleteSearchbarComponent } from '../share/autocomplete-searchbar/
 import { SearchHeaderComponent } from './search-header/search-header.component';
 import { DeviceListComponent } from './device-list/device-list.component';
 import { SupplyTabService } from './supply-tab.service';
+import { DeviceItemComponent } from './device-list/device-item/device-item.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { SupplyTabService } from './supply-tab.service';
     RouterModule.forChild([{ path: '', component: SupplyTabPage }])
   ],
   providers: [SupplyTabService],
-  declarations: [SupplyTabPage, AutocompleteSearchbarComponent, SearchHeaderComponent, DeviceListComponent]
+  declarations: [SupplyTabPage, AutocompleteSearchbarComponent, SearchHeaderComponent, DeviceListComponent, DeviceItemComponent]
 })
 export class SupplyTabPageModule { }

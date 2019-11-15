@@ -3,11 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 
 import { Device } from '../share/device.model';
-import { DeviceCommon } from './device-common';
 
 interface DeviceData {
   name: string,
   serialNumber: string,
+  terminalNumber: string,
   location: string,
   station: string,
   installedDate: number[],
@@ -22,10 +22,10 @@ export class DeviceService {
   private _devices = new BehaviorSubject<Device[]>([]);
 
   private _createDevice(data: DeviceData): Device {
-    return new Device(null, data.name, data.serialNumber, data.location, data.category);
+    return new Device(null, data.name, data.serialNumber, data.location, data.terminalNumber, data.category);
   }
 
-  constructor(private http: HttpClient, private common: DeviceCommon) {
+  constructor(private http: HttpClient) {
     this.http.get<DeviceData[]>('../../assets/deviceData.json')
       .forEach(resData => {
         const _device: Device[] = [];

@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 
 import { DeviceCommon} from '../../share/device-common';
@@ -34,7 +33,7 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
       this._stockHouse = new StockHouse([...arr.stockHouse]);
 
       this.subscription.add(
-        this.supplyTabService.changeDevice().subscribe(device => {
+        this.supplyTabService.device.subscribe(device => {
           if (device && this._stockHouse && this._stockHouse.stockHouse.length) {
             this.selectedDevice = device;
             this.deviceTerm = device.serialNumber.split('-').pop();
