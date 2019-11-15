@@ -22,7 +22,6 @@ export class DeviceListComponent implements OnInit, OnDestroy {
     private supplyTabService: SupplyTabService
   ) { }
 
-    // TODO : 장비가 바뀔때 만, resetSelectedDevice를 실행 해야 함.
   ngOnInit() {
     this.deviceSub = this.gDService.groupedDevices.subscribe(groupedDevices => {
       this.groupedDevices = [...groupedDevices];

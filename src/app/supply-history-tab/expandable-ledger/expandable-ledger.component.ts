@@ -3,6 +3,7 @@ import { DeviceEvent } from '../../share/device-event.model';
 import { DeviceCommon } from '../../share/device-common';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { DeviceEventService } from '../../share/device-event.service';
+import { LoadingController } from '@ionic/angular';
 
 class ExpandableCard {
   constructor(
@@ -28,17 +29,30 @@ export class ExpandableLedgerComponent implements OnInit, OnDestroy {
   @Input() date = new BehaviorSubject<string>('');
   private subscription = new Subscription;
   expandableBook: ExpandableChart[] = [];
+  isLoading: boolean = false;
 
-  constructor(private common: DeviceCommon, private eventService: DeviceEventService) { }
+  constructor(
+    private common: DeviceCommon, 
+    private loadingCtrl: LoadingController,
+    private eventService: DeviceEventService
+  ) { }
 
   ngOnInit() {
     this.subscription = this.date.subscribe(_date => {
-      this.subscription.add(this.eventService.getSupplyHistoryByDate(new Date(_date))
-        .subscribe((deviceEvents: DeviceEvent[]) => {
+      this.isLoading = true;
+      this.loadingCtrl
+        .create({ keyboardClose: true, message: '내역을 불러오고 있습니다...' })
+        .then(loadingEl => {
+          loadingEl.present();
           //order by : deviceCategory | stockOrder
-          this.setBook(deviceEvents);
-        }));
-    })
+          this.subscription.add(this.eventService.getSupplyHistoryByDate(new Date(_date))
+            .subscribe((deviceEvents: DeviceEvent[]) => {
+              this.isLoading = false;
+              loadingEl.dismiss();
+                this.setBook(deviceEvents);
+            }));
+        })
+      })
   }
 
   setBook(deviceEvents: DeviceEvent[]) {
