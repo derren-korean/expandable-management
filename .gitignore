@@ -34,18 +34,7 @@ npm-debug.log*
 
 package-lock\.json
 
-*.lock
-
 *.bin
-
 *.properties
-
 android/
-
 resources/
-
-capacitor\.config\.json
-
-config\.xml
-
-ionic\.config\.json
