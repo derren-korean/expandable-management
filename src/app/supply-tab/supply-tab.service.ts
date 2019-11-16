@@ -13,11 +13,14 @@ export class SupplyTabService {
   constructor(private deviceEventService: DeviceEventService) { }
 
   private _device = new BehaviorSubject<any>(null);
+  private _stock = new BehaviorSubject<Stock>(null);
   private _term = new BehaviorSubject<string>('');
   private _stockTitle = new BehaviorSubject<string>(null);
-  private _stockCount = new BehaviorSubject<number>(null);
+  private _stockCount = new BehaviorSubject<number>(1);
 
-  // todo: T2는 장소로만으로도 불출 할 수 있어야 한다.
+  // todo: T2는 장소로만으로도 불출 할 수 있어야 한다. serial number 를 0으로 지정한다. 그렇게하면, 유일한 값이 되지 않는다.
+  // todo: 카운트도 추가해야함.
+  // todo: supply-history도 변경해야함.
   saveSupply(device: Device, stock: Stock) {
     this.deviceEventService.supplyStock(device, stock)
       .subscribe(res => {
@@ -26,7 +29,7 @@ export class SupplyTabService {
       })
   }
 
-  get title() {
+  get stockTitle() {
     return this._stockTitle.asObservable();
   }
 
@@ -56,5 +59,13 @@ export class SupplyTabService {
 
   setStockCount(count: number) {
     this._stockCount.next(count);
+  }
+
+  get stock() {
+    return this._stock.asObservable();
+  }
+
+  setStock(stock: Stock) {
+    this._stock.next(stock);
   }
 }

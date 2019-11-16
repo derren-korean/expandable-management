@@ -27,7 +27,7 @@ export class StepCounterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.supplyService.setStockCount(0);
+    this.supplyService.setStockCount(1);
   }
 
 }

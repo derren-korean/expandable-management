@@ -4,6 +4,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { SupplyTabService, DeviceView } from '../supply-tab.service';
 import { StockService } from '../../share/stock.service';
 import { ItemView } from '../../share/device-common';
+import { Stock } from 'src/app/share/stock.model';
 
 @Component({
   selector: 'app-stock-select',
@@ -16,6 +17,7 @@ export class StockSelectComponent implements OnInit, OnDestroy {
 
   stockItemViewArr = new BehaviorSubject<ItemView[]>([]);
   selectedDevice:DeviceView = null;
+  selectedStock:Stock = null;
   searchbarSize:number = 12;
   counterSize:number = 0;
 
@@ -44,6 +46,15 @@ export class StockSelectComponent implements OnInit, OnDestroy {
           this.setStockItemView(device.name);
         }
       })
+    ).add(
+      this.supplyTabService.stock.subscribe(stock => {
+        if (stock) {
+          this._setViewSize(9, 3);
+        } else {
+          this._setViewSize(12, 0);
+        }
+        this.selectedStock = stock;
+      })
     )
   }
     setStockItemView(DeviceName: string) {
@@ -58,12 +69,17 @@ export class StockSelectComponent implements OnInit, OnDestroy {
         }
       })
       this.stockItemViewArr.next(_temp);
-      this._setViewSize(12, 0);
     }
   
-    setStock(stockTitle: any) {
-      this.supplyTabService.setStockTitle(stockTitle.target.value);
-      this._setViewSize(9, 3);
+    // selected by user
+    setStock(stockTitle: string) {
+      this.supplyTabService.setStockTitle(stockTitle);
+    }
+
+    // not selected just searching
+    // bug when typed full right word ex) 샘플트랩; stock must be selected! but autocomplete should not be removed.
+    clearStock(ev: any) {
+      this.supplyTabService.setStockTitle(ev.target.value);
     }
   
     _setViewSize(searchBar:number, counter:number) {

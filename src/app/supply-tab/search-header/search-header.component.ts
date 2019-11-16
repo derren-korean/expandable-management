@@ -45,7 +45,7 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
         })
       )
     }).add(
-      this.supplyTabService.title.subscribe(title => {
+      this.supplyTabService.stockTitle.subscribe(title => {
         this.selectStock(title);
       })
     ).add(
@@ -65,17 +65,19 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
   }
 
   selectStock(stockTitle: string) {
-    this.selectedStock = this._getStock(stockTitle)
+    this.selectedStock = this._getStock(stockTitle);
+    this.supplyTabService.setStock(this.selectedStock);
   }
 
   private _getStock(title: string) {
     let stock: Stock = null;
+    if (!this.selectedDevice || !title) {return stock;}
     this._stockHouse.stockHouse.forEach(stockRoom => {
       if (this.common.isSameName(stockRoom.roomName, this.selectedDevice.name)) {
-        stock = stockRoom.stockArray.find(stock => {
-          return this.common.isSameName(stock.name, title) || stock.alias.some(alias => this.common.isSameName(alias, title))
+        stock = stockRoom.stockArray.find(_stock => {
+          return this.common.isSameName(_stock.name, title) || (_stock.alias ? _stock.alias.some(_alias => this.common.isSameName(_alias, title)) : false);
         })
-        if (stock) return false;
+        if (stock) {return false};
       }
     })
     return stock;
