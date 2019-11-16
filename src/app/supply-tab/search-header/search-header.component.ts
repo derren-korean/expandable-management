@@ -21,6 +21,7 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
   private _stockHouse: StockHouse;
   selectedDevice: Device = null;
   selectedStock: Stock = null;
+  stockCount: number = 1;
 
   constructor(
     private common: DeviceCommon,
@@ -43,10 +44,13 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
           }
         })
       )
-    });
-    this.subscription.add(
-      this.supplyTabService.changeStockTitle().subscribe(title => {
+    }).add(
+      this.supplyTabService.title.subscribe(title => {
         this.selectStock(title);
+      })
+    ).add(
+      this.supplyTabService.stockCount.subscribe(count => {
+        this.stockCount = count;
       })
     )
   }
@@ -61,10 +65,6 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
   }
 
   selectStock(stockTitle: string) {
-    if (!stockTitle || !stockTitle.length) {
-      this.selectedStock = null;
-      return;
-    }
     this.selectedStock = this._getStock(stockTitle)
   }
 

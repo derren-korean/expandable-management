@@ -14,7 +14,8 @@ export class SupplyTabService {
 
   private _device = new BehaviorSubject<any>(null);
   private _term = new BehaviorSubject<string>('');
-  private stockTitle = new BehaviorSubject<string>(null);
+  private _stockTitle = new BehaviorSubject<string>(null);
+  private _stockCount = new BehaviorSubject<number>(null);
 
   // todo: T2는 장소로만으로도 불출 할 수 있어야 한다.
   saveSupply(device: Device, stock: Stock) {
@@ -25,12 +26,12 @@ export class SupplyTabService {
       })
   }
 
-  changeStockTitle() {
-    return this.stockTitle.asObservable();
+  get title() {
+    return this._stockTitle.asObservable();
   }
 
-  setStockTitle(title: any) {
-    this.stockTitle.next(title);
+  setStockTitle(title: string) {
+    this._stockTitle.next(title);
   }
 
   get device() {
@@ -47,5 +48,13 @@ export class SupplyTabService {
 
   setTerm(term: string) {
     this._term.next(term);
+  }
+
+  get stockCount() {
+    return this._stockCount.asObservable();
+  }
+
+  setStockCount(count: number) {
+    this._stockCount.next(count);
   }
 }

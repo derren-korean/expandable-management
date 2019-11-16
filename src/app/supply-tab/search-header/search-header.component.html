@@ -1,13 +1,10 @@
 <ion-toolbar color="primary">
-  <ion-buttons slot="start" class="ion-no-padding" *ngIf="selectedDevice && selectedStock">
-    <ion-button></ion-button>
-  </ion-buttons>
   <ion-searchbar placeholder="시리얼 넘버, 장소" [(ngModel)]="deviceTerm" (ionChange)="emitFilterTerm(deviceTerm)">
   </ion-searchbar>
   <ion-buttons slot="primary" class="ion-padding" *ngIf="selectedDevice && selectedStock">
     <ion-button fill="solid" color="light" type="button" (click)="supplySotck()">
       <ion-icon color="primary" name="paper-plane"></ion-icon>
-      <!-- <ion-badge color="danger">1</ion-badge> -->
+      <!-- <ion-badge color="danger">{{stockCount}}</ion-badge> -->
     </ion-button>
   </ion-buttons>
 </ion-toolbar>

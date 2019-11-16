@@ -1,38 +1,43 @@
-<ion-list *ngFor="let expandableChart of expandableBook">
-  <ion-item-divider>
-    <ion-label color="primary">
-      {{expandableChart.subTitle}}
-    </ion-label>
-  </ion-item-divider>
-  <ion-card *ngFor="let card of expandableChart.cards">
-    <!-- category || stockName  -->
-    <ion-card-header>
-      <ion-card-subtitle>{{expandableChart.subTitle}}</ion-card-subtitle>
-      <ion-card-title>{{card.title}}</ion-card-title>
-    </ion-card-header>
-
-    <ion-card-content>
-      <ion-item class="ion-no-padding">
-        <ion-grid class="ion-no-padding">
-          <ion-row size="12" size-sm class="ion-text-center">
-            <ion-col size="4">날짜</ion-col>
-            <ion-col size="8" class="ion-text-center">적요</ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-item>
-      <ion-list class="ion-no-padding" *ngFor="let deviceEvent of card.deviceEvents">
+<div>
+  <ion-text class="ion-text-center">
+    <h1 *ngIf="expandableBook.length === 0">불출내역이 존재하지 않습니다.</h1>
+  </ion-text>
+  <ion-list *ngFor="let expandableChart of expandableBook">
+    <ion-item-divider>
+      <ion-label color="primary">
+        {{expandableChart.subTitle}}
+      </ion-label>
+    </ion-item-divider>
+    <ion-card *ngFor="let card of expandableChart.cards">
+      <!-- category || stockName  -->
+      <ion-card-header>
+        <ion-card-subtitle>{{expandableChart.subTitle}}</ion-card-subtitle>
+        <ion-card-title>{{card.title}}</ion-card-title>
+      </ion-card-header>
+  
+      <ion-card-content>
         <ion-item class="ion-no-padding">
           <ion-grid class="ion-no-padding">
             <ion-row size="12" size-sm class="ion-text-center">
-              <ion-col size="4">{{deviceEvent.createdDate | date :"MM/dd"}}</ion-col>
-              <ion-col size="8" class="ion-text-center">
-                <span *ngIf="deviceEvent.terminalNumber == 2">{{deviceEvent.terminalNumber}}터미널</span>
-                {{deviceEvent.location}} ({{deviceEvent.serialNumber}})
-              </ion-col>
+              <ion-col size="4">날짜</ion-col>
+              <ion-col size="8" class="ion-text-center">적요</ion-col>
             </ion-row>
           </ion-grid>
-        </ion-item> <!-- teminal -->
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
-</ion-list>
+        </ion-item>
+        <ion-list class="ion-no-padding" *ngFor="let deviceEvent of card.deviceEvents">
+          <ion-item class="ion-no-padding">
+            <ion-grid class="ion-no-padding">
+              <ion-row size="12" size-sm class="ion-text-center">
+                <ion-col size="4">{{deviceEvent.createdDate | date :"MM/dd"}}</ion-col>
+                <ion-col size="8" class="ion-text-center">
+                  <span *ngIf="deviceEvent.terminalNumber == 2">{{deviceEvent.terminalNumber}}터미널</span>
+                  {{deviceEvent.location}} ({{deviceEvent.serialNumber}})
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item> <!-- teminal -->
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</div>
