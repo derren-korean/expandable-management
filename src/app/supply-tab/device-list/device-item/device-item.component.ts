@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Device } from 'src/app/share/device.model';
-import { SupplyTabService } from '../../supply-tab.service';
+import { SupplyTabService, DeviceView } from '../../supply-tab.service';
 import { DeviceCommon } from 'src/app/share/device-common';
 
 @Component({
@@ -10,12 +9,12 @@ import { DeviceCommon } from 'src/app/share/device-common';
 })
 export class DeviceItemComponent implements OnInit {
 
-  @Input() device: Device;
+  @Input() device: DeviceView;
   constructor(private common: DeviceCommon, private supplyTabService: SupplyTabService) { }
 
   ngOnInit() {}
 
-  changeDevice(device: any) {
+  changeDevice(device: DeviceView) {
     this.supplyTabService.setDevice(device);
   }
 

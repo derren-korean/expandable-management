@@ -16,6 +16,7 @@ export class DeviceListComponent implements OnInit, OnDestroy {
   filteredDevices: GroupedDevice[] = [];
   private deviceSub = new Subscription;
   private groupedDevices: GroupedDevice[] = [];
+  private checkedDevice: DeviceView = null;
 
   constructor(
     private gDService: GroupedDeviceService,
@@ -30,16 +31,27 @@ export class DeviceListComponent implements OnInit, OnDestroy {
       this.supplyTabService.term.subscribe(term => {
         this.setFilteredDevices(term);
       })
-    );
+    ).add(
+      this.supplyTabService.device.subscribe((device: DeviceView) => {
+        this.checkedDevice = device;
+      })
+    )
   }
 
   resetSelectedDevice() {
-    this.filteredDevices.forEach(groupedDevices => {
-      groupedDevices.devices.forEach((device: DeviceView) => {
-        if (device.isChecked) {
-          device.isChecked = false;
-        }
-      })
+    for (const groupedDevice of this.filteredDevices) {
+      if (!this.checkedDevice) {break;}
+      if (this._unCheckDevice(groupedDevice)) {break;}
+    }
+  }
+
+  _unCheckDevice(groupedDevice: GroupedDevice) {
+    return groupedDevice.devices.some((device: DeviceView) => {
+      if (device.isChecked) {
+        device.isChecked = false;
+        this.checkedDevice = null;
+        return true;
+      }
     })
   }
 
@@ -50,7 +62,7 @@ export class DeviceListComponent implements OnInit, OnDestroy {
       return;
     }
     this.filteredDevices = this.groupedDevices.reduce((result: GroupedDevice[], currentValue: GroupedDevice) => {
-      const _serialMatch = (device: Device) => device.serialNumber.split('-').pop().startsWith(term);
+      const _serialMatch = (device: Device) => device.getLastSerialNumber().startsWith(term);
       const _locationMatch = (device: Device) => device.location.toLowerCase().indexOf(term.toLowerCase()) > -1;
 
       const _filter = Number.isNaN(+term) ? _locationMatch : _serialMatch;

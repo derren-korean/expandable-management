@@ -5,7 +5,7 @@ import { DeviceCommon} from '../../share/device-common';
 import { Device } from '../../share/device.model';
 import { Stock } from '../../share/stock.model';
 import { StockService, StockHouse } from '../../share/stock.service';
-import { SupplyTabService } from '../supply-tab.service';
+import { SupplyTabService, DeviceView } from '../supply-tab.service';
 
 @Component({
   selector: 'app-search-header',
@@ -33,10 +33,10 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
       this._stockHouse = new StockHouse([...arr.stockHouse]);
 
       this.subscription.add(
-        this.supplyTabService.device.subscribe(device => {
+        this.supplyTabService.device.subscribe((device: DeviceView) => {
           if (device && this._stockHouse && this._stockHouse.stockHouse.length) {
             this.selectedDevice = device;
-            this.deviceTerm = device.serialNumber.split('-').pop();
+            this.deviceTerm = device.getLastSerialNumber();
             if (!device.isChecked) {
               this.reset(device);
             }

@@ -74,12 +74,13 @@ export class ExpandableLedgerComponent implements OnInit, OnDestroy {
   }
 
   _getCard(deviceName: string, stockNames: string[], deviceEvents: DeviceEvent[]) {
+    const _matchNames = (el: DeviceEvent, _stockName: string) => el.deviceName === deviceName && el.stockName === _stockName
     const cards: ExpandableCard[] = [];
     stockNames.forEach((_stockName: string) => {
-      if (deviceEvents.some(e => e.stockName === _stockName)) {
+      if (deviceEvents.some(el => _matchNames(el, _stockName))) {
         cards.push(
           new ExpandableCard(_stockName,
-            deviceEvents.filter(e => e.deviceName === deviceName && e.stockName === _stockName))
+            deviceEvents.filter(el => _matchNames(el, _stockName)))
         );
       }
     })
