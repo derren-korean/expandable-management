@@ -55,6 +55,7 @@ export class DeviceListComponent implements OnInit, OnDestroy {
   }
 
   resetList() {
+    this.uncheckSelectedDevice();
     this.filteredDevices = [...this.groupedDevices];
   }
 

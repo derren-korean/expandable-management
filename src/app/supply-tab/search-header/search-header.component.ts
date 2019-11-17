@@ -45,6 +45,7 @@ export class SearchHeaderComponent implements OnInit, OnDestroy {
     this._stockCount = 1;
     this.supplyTabService.setDevice(null);
     this.supplyTabService.setStock(null);
+    this.supplyTabService.setDeviceTerm(null);
     this.supplyTabService.setStockCount(1);
   }
 
