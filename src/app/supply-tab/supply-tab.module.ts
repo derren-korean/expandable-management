@@ -11,6 +11,7 @@ import { SupplyTabService } from './supply-tab.service';
 import { DeviceItemComponent } from './device-list/device-item/device-item.component';
 import { StockSelectComponent } from './stock-select/stock-select.component';
 import { StepCounterComponent } from './stock-select/step-counter/step-counter.component';
+import { DeviceFilterComponent } from './device-filter/device-filter.component';
 
 @NgModule({
   imports: [
@@ -20,6 +21,6 @@ import { StepCounterComponent } from './stock-select/step-counter/step-counter.c
     RouterModule.forChild([{ path: '', component: SupplyTabPage }])
   ],
   providers: [SupplyTabService],
-  declarations: [SupplyTabPage, AutocompleteSearchbarComponent, SearchHeaderComponent, DeviceListComponent, DeviceItemComponent, StockSelectComponent, StepCounterComponent]
+  declarations: [SupplyTabPage, AutocompleteSearchbarComponent, SearchHeaderComponent, DeviceListComponent, DeviceItemComponent, StockSelectComponent, StepCounterComponent, DeviceFilterComponent]
 })
 export class SupplyTabPageModule { }

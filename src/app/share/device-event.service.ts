@@ -40,7 +40,8 @@ export class DeviceEventService {
     this.projectId = environment.firebase.projectId;
   }
 
-  supplyStock(device: Device, stock: Stock) {
+  // todo : db 변경하기, retrun값과 view수정하기
+  supplyStock(device: Device, stock: Stock, count: number) {
     let token;
     this.authService.token.subscribe(_token => token = _token);
     let userId;
@@ -56,7 +57,8 @@ export class DeviceEventService {
         "stockName": stock.name,
         "createdDate": new Date().toISOString(),
         "serialNumber": device.serialNumber,
-        "location": device.location
+        "location": device.location,
+        "count": count
       }).pipe(take(1), tap(res => {
         return res;
       }))

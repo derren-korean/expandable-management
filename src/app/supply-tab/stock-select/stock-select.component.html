@@ -1,4 +1,4 @@
-<ion-grid *ngIf="selectedDevice">
+<ion-grid *ngIf="_selectedDevice">
   <ion-row>
     <ion-col [size]="searchbarSize">
         <app-autocomplete-searchbar [itemViewArr]="stockItemViewArr" (itemSelected)="setStock($event)" (ionChange)="clearStock($event)">
