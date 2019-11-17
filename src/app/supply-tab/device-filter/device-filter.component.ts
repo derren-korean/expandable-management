@@ -8,40 +8,30 @@ import { IonSearchbar } from '@ionic/angular';
   styleUrls: ['./device-filter.component.scss'],
 })
 export class DeviceFilterComponent implements OnInit {
-  // role: 
-  // 자신의 filter값을 device-list로 보내주는 작업,
-
-// ionChange로 값을 변경할 때마다 stockService로 emit
-@ViewChild('deviceTerm', { static: true }) deviceTerm: IonSearchbar;
- private prevTerm: string = null;
-
+@ViewChild('deviceTerm', { static: true }) deviceTerm: string;
   constructor(private supplyTabService: SupplyTabService) { }
 
   ngOnInit() {
     this.supplyTabService.device.subscribe((device: DeviceView) => {
       if (device) {
-        this.setValue(device.getLastSerialNumber());
+        this.setTerm(device.getLastSerialNumber());
       }
     }).add(
-      // 장비 uncheck을 통해서 term의 조건을 지정할 수 있다.
+      // 장비 uncheck을 통해서 term의 조건을 지정할 수 있다. 이 패턴 때문에 emitFilterTerm이 2번 호출됨...
       this.supplyTabService.deviceTerm.subscribe((deviceTerm: string) => {
-        this.deviceTerm.getInputElement().then((el) => { 
-          if (deviceTerm !== el.value) {
-            this.setValue(deviceTerm);
-          }
-        })
+        this.setTerm(deviceTerm);
       })
     )
   }
 
-  setValue(text: string) {
-    this.deviceTerm.getInputElement().then((el) => { 
-      el.value = text;
-    })
+  setTerm(term: string) {
+    if (this.deviceTerm !== term) {
+      this.deviceTerm = term;
+    }
   }
 
-  emitFilterTerm(term: any) {
-    this.supplyTabService.setDeviceTerm(term.target.value);
+  emitFilterTerm(term: string) {
+    this.supplyTabService.setDeviceTerm(term);
   }
 
 }

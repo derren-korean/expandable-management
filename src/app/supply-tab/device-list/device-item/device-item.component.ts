@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { SupplyTabService, DeviceView } from '../../supply-tab.service';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { DeviceView } from '../../supply-tab.service';
 import { DeviceCommon } from 'src/app/share/device-common';
 
 @Component({
@@ -10,12 +10,13 @@ import { DeviceCommon } from 'src/app/share/device-common';
 export class DeviceItemComponent implements OnInit {
 
   @Input() device: DeviceView;
-  constructor(private common: DeviceCommon, private supplyTabService: SupplyTabService) { }
+  @Output() deviceSelected = new EventEmitter<DeviceView>();
+  constructor(private common: DeviceCommon) { }
 
   ngOnInit() {}
 
-  changeDevice(device: DeviceView) {
-    this.supplyTabService.setDevice(device);
+  selectDevice(device: DeviceView) {
+    this.deviceSelected.emit(device);
   }
 
   getThumbnail(name: string) {

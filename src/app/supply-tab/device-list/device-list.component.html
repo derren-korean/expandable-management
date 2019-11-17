@@ -6,7 +6,8 @@
       </ion-item-divider>
       <app-device-item 
         *ngFor="let device of grouped.devices"
-        [device]="device">
+        [device]="device"
+        (deviceSelected)="changeList($event)">
       </app-device-item>
     </ion-card>
   </ion-col>

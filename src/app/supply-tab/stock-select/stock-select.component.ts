@@ -49,12 +49,12 @@ export class StockSelectComponent implements OnInit, OnDestroy {
       })
     ).add(
       this.supplyTabService.stock.subscribe(stock => {
+        this.selectedStock = stock;
         if (stock) {
           this._setViewSize(9, 3);
         } else {
           this._setViewSize(12, 0);
         }
-        this.selectedStock = stock;
       })
     )
   }

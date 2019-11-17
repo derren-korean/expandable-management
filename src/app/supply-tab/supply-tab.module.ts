@@ -21,6 +21,15 @@ import { DeviceFilterComponent } from './device-filter/device-filter.component';
     RouterModule.forChild([{ path: '', component: SupplyTabPage }])
   ],
   providers: [SupplyTabService],
-  declarations: [SupplyTabPage, AutocompleteSearchbarComponent, SearchHeaderComponent, DeviceListComponent, DeviceItemComponent, StockSelectComponent, StepCounterComponent, DeviceFilterComponent]
+  declarations: [
+    SupplyTabPage, 
+    AutocompleteSearchbarComponent, 
+    SearchHeaderComponent, 
+    DeviceFilterComponent,
+    DeviceListComponent, 
+    DeviceItemComponent, 
+    StockSelectComponent, 
+    StepCounterComponent
+  ]
 })
 export class SupplyTabPageModule { }

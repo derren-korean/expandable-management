@@ -13,11 +13,11 @@ import { SupplyTabService, DeviceView } from '../supply-tab.service';
   styleUrls: ['./device-list.component.scss'],
 })
 export class DeviceListComponent implements OnInit, OnDestroy {
-
   filteredDevices: GroupedDevice[] = [];
   private deviceSub = new Subscription;
   private groupedDevices: GroupedDevice[] = [];
   private checkedDevice: DeviceView = null;
+  private _deviceTerm: string = null;
 
   constructor(
     private gDService: GroupedDeviceService,
@@ -28,29 +28,30 @@ export class DeviceListComponent implements OnInit, OnDestroy {
     this.deviceSub = this.gDService.groupedDevices.subscribe(groupedDevices => {
       this.groupedDevices = [...groupedDevices];
       this.setFilteredDevices(null);
-    }).add(
-      this.supplyTabService.deviceTerm.subscribe(term => {
-        this.setFilteredDevices(term);
-      })
-    ).add( // 자식 컴포넌트인 device-item에서 선택된 device를 불러옴.
-      this.supplyTabService.device.subscribe((device: DeviceView) => {
-        if (this.checkedDevice) {
-          // user가 필터되어 1개만 존재하는 장비를 다시 클릭하여 취소. 초기화를 진행한다.
-          if (!device.isChecked) {
-            this.resetList();
-            this.checkedDevice = null;
-            this.supplyTabService.setDevice(null);
-            this.supplyTabService.setDeviceTerm('');
-            return;
-          }
-          this.uncheckSelectedDevice();
+    })
+    .add(
+      this.supplyTabService.deviceTerm.subscribe((term: string) => {
+        if (this._deviceTerm !== term) {
+          this.setFilteredDevices(term);
         }
-        this.checkedDevice = device;
-        if (device) {
-          this.supplyTabService.setDeviceTerm(device.getLastSerialNumber());
-        }
+        this._deviceTerm = term;
       })
     )
+  }
+
+  // 선택한 장비를 리스트 맨 위에 놓고, deviceFilter의 값을 바꾸지 않는게 나을 수도 있다.
+  // 장소보다 시리얼 넘버로 찾을 가능성이 높기 때문에 이렇게 설정 하였다.
+  // 필터리스트에 선택된 1개 or 전부를 그린다.
+  changeList(device: DeviceView) {
+    if (this.checkedDevice && !device.isChecked) {
+      this.resetList();
+    }
+    const deviceTerm: string = device.isChecked ? device.getLastSerialNumber() : '';
+    const _device = device.isChecked ? device : null;
+    
+    this.checkedDevice = _device;
+    this.supplyTabService.setDevice(_device);
+    this.supplyTabService.setDeviceTerm(deviceTerm);
   }
 
   resetList() {
@@ -62,7 +63,7 @@ export class DeviceListComponent implements OnInit, OnDestroy {
     for (const groupedDevice of this.filteredDevices) {
       if (!this.checkedDevice) {break;}
       if (this._unCheckDevice(groupedDevice)) {
-        this.supplyTabService.setDevice(null); // checkedDevice를 변경하기 때문에 loop가 아님.
+        this.supplyTabService.setDevice(null);
         break;
       }
     }
