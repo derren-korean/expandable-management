@@ -1,14 +1,10 @@
-<ion-row>
-  <ion-col size-lg="4" offset-lg="4" size-md="6" offset-md="3">
-    <ion-card *ngFor="let grouped of filteredDevices">
-      <ion-item-divider color="primary">
-        {{ grouped.section }}
-      </ion-item-divider>
-      <app-device-item 
-        *ngFor="let device of grouped.devices"
-        [device]="device"
-        (deviceSelected)="changeList($event)">
-      </app-device-item>
-    </ion-card>
-  </ion-col>
-</ion-row>
+<ion-card *ngFor="let grouped of filteredDevices">
+  <ion-item-divider color="primary">
+    {{ grouped.section }}
+  </ion-item-divider>
+  <app-device-item 
+    *ngFor="let device of grouped.devices"
+    [device]="device"
+    (deviceSelected)="changeList($event)">
+  </app-device-item>
+</ion-card>

@@ -7,6 +7,6 @@
   <app-datetime-picker (dateChanged)="changeDate($event)"></app-datetime-picker>
 </ion-header>
 
-<ion-content>
+<ion-content overflow-scroll="true">
   <app-expandable-ledger [date]="selectedDate"></app-expandable-ledger>
 </ion-content>

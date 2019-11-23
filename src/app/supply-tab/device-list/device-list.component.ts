@@ -26,8 +26,10 @@ export class DeviceListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.deviceSub = this.gDService.groupedDevices.subscribe(groupedDevices => {
-      this.groupedDevices = [...groupedDevices];
-      this.setFilteredDevices(null);
+      if (!this.groupedDevices.length) {
+        this.groupedDevices = [...groupedDevices];
+        this.setFilteredDevices(null);
+      }
     })
     .add(
       this.supplyTabService.deviceTerm.subscribe((term: string) => {
