@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SupplyTabService, DeviceView } from '../supply-tab.service';
-import { IonSearchbar } from '@ionic/angular';
 
 @Component({
   selector: 'app-device-filter',

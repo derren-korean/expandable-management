@@ -1,6 +1,6 @@
 <ion-toolbar color="primary">
   <app-device-filter></app-device-filter>
-  <ion-buttons slot="primary" class="ion-padding" *ngIf="_selectedDevice && _selectedStock">
+  <ion-buttons slot="primary" *ngIf="_selectedDevice && _selectedStock">
     <ion-button fill="solid" color="light" type="button" (click)="supplySotck()">
       <ion-icon color="primary" name="paper-plane"></ion-icon>
       <ion-badge color="danger">{{_stockCount}}</ion-badge>
