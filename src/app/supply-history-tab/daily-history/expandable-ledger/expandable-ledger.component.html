@@ -31,7 +31,8 @@
                 <ion-col size="4">{{deviceEvent.createdDate | date :"MM/dd"}}</ion-col>
                 <ion-col size="8" class="ion-text-center">
                   <span *ngIf="deviceEvent.terminalNumber == 2">{{deviceEvent.terminalNumber}}터미널</span>
-                  {{deviceEvent.location}} ({{deviceEvent.serialNumber}})
+                  <span>{{deviceEvent.location}} ({{deviceEvent.serialNumber}})</span>
+                  <span *ngIf="deviceEvent.count"> - {{deviceEvent.count}}</span>
                 </ion-col>
               </ion-row>
             </ion-grid>

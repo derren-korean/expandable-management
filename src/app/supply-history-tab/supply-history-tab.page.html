@@ -1,12 +1,16 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title class="ion-text-center">
-      불출 내역
+      {{title}}
     </ion-title>
+    <ion-buttons slot="end">
+        <ion-button fill="outline" (click)="openActionSheet()">
+          <ion-icon name="swap"></ion-icon>
+          모드 변경
+        </ion-button>
+      </ion-buttons>
   </ion-toolbar>
-  <app-datetime-picker (dateChanged)="changeDate($event)"></app-datetime-picker>
 </ion-header>
-
-<ion-content overflow-scroll="true">
-  <app-expandable-ledger [date]="selectedDate"></app-expandable-ledger>
+<ion-content>
+    <ion-router-outlet></ion-router-outlet>
 </ion-content>

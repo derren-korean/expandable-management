@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { DeviceEvent } from '../../share/device-event.model';
-import { DeviceCommon } from '../../share/device-common';
+import { DeviceEvent } from '../../../share/device-event.model';
+import { DeviceCommon } from '../../../share/device-common';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { DeviceEventService } from '../../share/device-event.service';
+import { DeviceEventService } from '../../../share/device-event.service';
 import { LoadingController } from '@ionic/angular';
 
 class ExpandableCard {

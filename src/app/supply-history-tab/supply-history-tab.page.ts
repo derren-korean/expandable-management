@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { ActionSheetController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-supply-history-tab',
@@ -7,19 +8,44 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['supply-history-tab.page.scss']
 })
 export class SupplyHistoryTabPage {
+  title: string = '불출내역';
 
-  selectedDate = new BehaviorSubject<string>('');
-  private _date: string = '';
-
-  constructor() { }
+  constructor(
+    public actionSheetController: ActionSheetController, 
+    private router: Router
+    ) { }
 
   ionViewWillEnter() {
-    this.changeDate(this._date);
   }
 
-  changeDate(date: string) {
-    this.selectedDate.next(date);
-    this._date = date;
+  navigate(mode: string) {
+    console.log(this.router.routerState.snapshot.url);
+    this.router.navigateByUrl('/tabs/supply-history/'+mode)
+  }
+
+  async openActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      header: this.title,
+      buttons: [{
+        text: '날짜로 검색',
+        icon: 'clock',
+        handler: () => this.navigate('daily')
+      },
+      {
+        text: '소모품으로 검색',
+        icon: 'build',
+        handler: () => this.navigate('device')
+      },
+      {
+        text: '취소',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    await actionSheet.present();
   }
 
 }

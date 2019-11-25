@@ -18,7 +18,9 @@ interface SupplyRest {
   stockName: string,
   createdDate: string,
   serialNumber: string,
-  location: string // 불출 당시의 장소
+  location: string, // 불출 당시의 장소
+  count: string,
+  unit: string
 }
 
 interface SupplyRestRes {
@@ -34,7 +36,6 @@ export class DeviceEventService {
 
   constructor(
     private http: HttpClient,
-    private dEventService: DeviceEventService,
     private authService: AuthService
   ) {
     this.projectId = environment.firebase.projectId;
@@ -58,7 +59,7 @@ export class DeviceEventService {
         "createdDate": new Date().toISOString(),
         "serialNumber": device.serialNumber,
         "location": device.location,
-        "count": count
+        "count": count + `[${stock.unit}]`
       }).pipe(take(1), tap(res => {
         return res;
       }))
@@ -96,7 +97,18 @@ export class DeviceEventService {
               id = deviceEvent.id;
             }
             _temp.push(
-              new DeviceEvent(id, EventType.supply, deviceEvent.terminal, deviceEvent.category, deviceEvent.deviceName, deviceEvent.stockName, new Date(deviceEvent.createdDate), deviceEvent.serialNumber.split("-").pop(), deviceEvent.location)
+              new DeviceEvent(
+                id, 
+                EventType.supply, 
+                deviceEvent.terminal, 
+                deviceEvent.category, 
+                deviceEvent.deviceName, 
+                deviceEvent.stockName, 
+                new Date(deviceEvent.createdDate), 
+                deviceEvent.serialNumber.split("-").pop(), 
+                deviceEvent.location,
+                deviceEvent.count
+                )
             )
           }
         }
